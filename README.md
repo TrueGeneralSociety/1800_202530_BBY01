@@ -59,8 +59,13 @@ elmo-hikes/
 
 
 ## Contributors
-- YenYi- BCIT CST Student who loves badminton. 
-- Samien and Alex- BCIT CST Students, Frontend enthusiast with a knack for creative design. Fun fact: Has a collection of over 50 houseplants.
+
+
+
+=======
+- **Alex Lee** - BCIT CST Student with a passion for gaming and user-friendly applications. Fun fact: Loves puzzles and tekken 8 
+- **Samien Munwar** - BCIT CST Student with a passion for exercising and user-friendly applications. Fun fact: Loves solving Rubik's Cubes in under a minute.
+- **YenYi**- BCIT CST Student who loves badminton. 
 
 ---
 
