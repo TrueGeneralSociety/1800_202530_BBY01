@@ -59,9 +59,7 @@ elmo-hikes/
 
 
 ## Contributors
-- **Alex Lee** - BCIT CST Student with a passion for outdoor adventures and user-friendly applications. Fun fact: Loves solving Rubik's Cubes in under a minute.
-- **Samian Munwar, Yen Yi Huang** - BCIT CST Student, Frontend enthusiast with a knack for creative design. Fun fact: Has a collection of over 50 houseplants.
-
+- **Alex Lee** - BCIT CST Student with a passion for gaming and user-friendly applications. Fun fact: Loves puzzles and tekken 8 
 ---
 
 
