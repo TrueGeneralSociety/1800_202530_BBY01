@@ -60,6 +60,8 @@ elmo-hikes/
 
 ## Contributors
 - **Alex Lee** - BCIT CST Student with a passion for gaming and user-friendly applications. Fun fact: Loves puzzles and tekken 8 
+- **Samien Munwar** - BCIT CST Student with a passion for exercising and user-friendly applications. Fun fact: Loves solving Rubik's Cubes in under a minute.
+
 ---
 
 
