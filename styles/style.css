@@ -1,1 +1,38 @@
 
+.custom-navbar {
+  background-color: #888788;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
+}
+
+.custom-navbar .navbar-brand {
+  font-weight: 700;
+  color: #007bff;
+  transition: color 0.3s ease;
+}
+
+.custom-navbar .navbar-brand:hover {
+  color: #0056b3;
+}
+
+.custom-navbar .nav-link {
+  color: #333;
+  margin-right: 1rem;
+  transition: color 0.3s ease;
+}
+
+.custom-navbar .nav-link:hover {
+  color: #007bff;
+}
+
+.custom-navbar .nav-link.active {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.navbar-toggler {
+  border: none;
+}
+.navbar-toggler:focus {
+  box-shadow: none;
+}
