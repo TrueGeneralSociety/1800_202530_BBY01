@@ -45,8 +45,18 @@ h1 {
   left: 30%;
   font-size: 70px;
 }
-button {
+.hero-text button {
   position: absolute;
   top: 50%;
   left: 50%;
+}
+
+footer {
+  background-color: #7fa9d3;
+  padding: 1rem 0;
+  margin-top: 2rem;
+  border-top: 1px solid #e7e7e7;
+  width: 100vw;
+  display: flex;
+  justify-content: space-around;
 }
