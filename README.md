@@ -1,20 +1,17 @@
-# Elmo Hikes
+# SynCalendar
 
 
 ## Overview
-Elmo Hikes is a client-side JavaScript web application that helps users discover and explore hiking trails. The app displays a curated list of hike trails, each with details such as name, location, difficulty, and an image. Users can browse the list and mark their favorite trails for easy access later.
-
-Developed for the COMP 1800 course, this project applies User-Centred Design practices and agile project management, and demonstrates integration with Firebase backend services for storing user favorites.
+Our team, BBY01 (Alex, Samien, YenYi), is developing an app that helps students stay on top of their learning schedules by creating a shared calendar with deadlines and a discussion channel for quiz or assignment questions, unlike the current Learning Hub which only shows reminders when logged in.
 
 ---
 
 
 ## Features
 
-- Browse a list of curated hiking trails with images and details
-- Mark and unmark trails as favorites
-- View a personalized list of favorite hikes
-- Responsive design for desktop and mobile
+- enables to put a deadline for the course
+- access to the calendar list
+- notification for the upcoming deadline
 
 ---
 
@@ -33,9 +30,9 @@ Example:
 ## Usage
 
 1. Open your browser and visit `http://localhost:3000`.
-2. Browse the list of hiking trails displayed on the main page.
-3. Click the heart icon (or similar) to mark a trail as a favorite.
-4. View your favorite hikes in the favorites section.
+2. go to the desired channel.
+3. add the deadline to the desired course.
+4. View the calendar from calendar page.
 
 ---
 
@@ -43,13 +40,13 @@ Example:
 ## Project Structure
 
 ```
-elmo-hikes/
+1800_202530_BBY01/
 ├── src/
 │   ├── main.js
 ├── styles/
 │   └── style.css
 ├── public/
-├── images/
+├── svgs/
 ├── index.html
 ├── package.json
 ├── README.md
@@ -72,7 +69,7 @@ elmo-hikes/
 
 ## Acknowledgments
 
-- Trail data and images are for demonstration purposes only.
+- Deadlines are all gained from crowdsourcing data from users.
 - Code snippets were adapted from resources such as [Stack Overflow](https://stackoverflow.com/) and [MDN Web Docs](https://developer.mozilla.org/).
 - Icons sourced from [FontAwesome](https://fontawesome.com/) and images from [Unsplash](https://unsplash.com/).
 
@@ -82,14 +79,14 @@ elmo-hikes/
 ## Limitations and Future Work
 ### Limitations
 
-- Limited trail details (e.g., no live trail conditions).
+- Crowdsourcing data limits the accuracy of the data.
 - Accessibility features can be further improved.
 
 ### Future Work
 
-- Implement map view and trailhead directions.
-- Add filtering and sorting options (e.g., by difficulty, distance).
-- Create a dark mode for better usability in low-light conditions.
+- enhance the user experience.
+- update the preference if needed.
+- something.
 
 ---
 
