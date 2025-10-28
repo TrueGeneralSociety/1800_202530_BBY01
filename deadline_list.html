@@ -13,7 +13,6 @@
     <!-- Link to styles of your own -->
     <link rel="stylesheet" href="./styles/style.css" />
   </head>
-
   <body>
     <nav class="navbar navbar-expand-md custom-navbar">
       <div class="container-fluid">
@@ -36,9 +35,7 @@
             <li class="nav-item">
               <a class="nav-link active" href="#">Login</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
-            </li>
+            <li class="nav-item"><a class="nav-link" href="#">About</a></li>
             <li class="nav-item">
               <a class="nav-link" href="#">What we do</a>
             </li>
@@ -52,13 +49,20 @@
         </div>
       </div>
     </nav>
-    <div class="hero-image">
-      <img src="hero.png" />
-      <div class="hero-text">
-        <h1>Welcome to our app</h1>
-        <button>Sign up</button>
-      </div>
-    </div>
+
+    <main>
+      <h1>Deadlines</h1>
+      <ul class="list-group" id="deadline-list">
+        <!-- Deadline items will be dynamically inserted here -->
+        <li class="list-group-item">Deadline</li>
+        <li class="list-group-item list-group-item-warning">Nearby deadline</li>
+        <li class="list-group-item list-group-item-danger">Missed deadline</li>
+        <li class="list-group-item list-group-item-success">
+          Checked and met deadline
+        </li>
+        <li class="list-group-item">Vestibulum at eros</li>
+      </ul>
+    </main>
 
     <footer>
       <button type="button" class="btn btn-primary btn-large position-relative">

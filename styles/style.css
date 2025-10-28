@@ -39,10 +39,19 @@
   align-items: center;
 }
 
+/* Make the page a column flex container so footer stays at the bottom */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Allow main content to grow and push the footer down */
+main {
+  flex: 1 0 auto; /* grow and take available space */
+}
+
 h1 {
-  position: absolute;
-  top: 30%;
-  left: 30%;
   font-size: 70px;
 }
 .hero-text button {
@@ -56,7 +65,8 @@ footer {
   padding: 1rem 0;
   margin-top: 2rem;
   border-top: 1px solid #e7e7e7;
-  width: 100vw;
+  /* prefer 100% to avoid horizontal scrolling caused by 100vw */
+  width: 100%;
   display: flex;
   justify-content: space-around;
 }
