@@ -4,16 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register</title>
+    <title>Login</title>
 </head>
 
 <body>
-    <h2>Create an Account </h2>
+    <h2>Login Page</h2>
     <form>
-        <div class="form-group">
-            <label for="exampleInputEmail1">User name</label>
-            <input type="text" class="form-control" id="username">
-        </div>
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
             <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
@@ -22,11 +18,11 @@
             <label for="exampleInputPassword1">Password</label>
             <input type="password" class="form-control" id="password">
         </div>
-        <small>Already have an account? <a href="login.html">Login here</a></small>
-        <button id="registerBtn" class="registerbtn btn-primary">Register</button>
-
+        <button id="loginBtn" class="loginbtn btn-primary">Login</button>
+        <button id="registerBtn" class="registerbtn btn-primary"><a href="./register.html">Register</a></button>
     </form>
-    <script type="module" src="./src/register.js"></script>
+
+    <script type="module" src="../src/login.js"></script>
 </body>
 
 </html>
