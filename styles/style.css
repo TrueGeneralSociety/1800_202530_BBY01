@@ -9,19 +9,24 @@ footer {
   justify-content: space-around;
   align-items: center;
   padding: 1rem 0;
-  z-index: 1000; 
+  z-index: 1000;
   margin-top: 2rem;
 }
 
 body {
   margin: 0;
   padding-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .custom-navbar {
   background-color: #888788;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 0.5rem 1rem;
+  position: fixed !important;
+  width: 100%;
 }
 
 .custom-navbar .navbar-brand {
@@ -52,31 +57,29 @@ body {
 .navbar-toggler {
   border: none;
 }
+
 .navbar-toggler:focus {
   box-shadow: none;
 }
+
 .hero-image {
   align-items: center;
 }
 
-/* Make the page a column flex container so footer stays at the bottom */
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
 /* Allow main content to grow and push the footer down */
 main {
-  flex: 1 0 auto; /* grow and take available space */
+  flex: 1 0 auto;
+  margin-top: 60px;
+  /* grow and take available space */
 }
 
 .hero-text h1 {
-    position: absolute;
-  top:30%;
+  position: absolute;
+  top: 30%;
   left: 30%;
   font-size: 40px;
 }
+
 .hero-text button {
   position: absolute;
   top: 50%;
@@ -100,7 +103,7 @@ footer {
   justify-content: space-around;
   align-items: center;
   padding: 1rem 0;
-  z-index: 1000; 
+  z-index: 1000;
   margin-top: 2rem;
 }
 
@@ -108,10 +111,12 @@ footer {
   position: static;
   font-size: 2rem;
   margin-bottom: 1rem;
+  text-align: center;
 }
+
 .list-item {
   list-style-type: none;
-  padding: 0;  
+  padding: 0;
 }
 
 .list-box {
@@ -130,13 +135,13 @@ footer {
 }
 
 .list-box:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 .button-container {
   display: flex;
-  justify-content: center; 
-  margin-top: 1rem;     
+  justify-content: center;
+  margin-top: 1rem;
 }
 
 #add-channel-btn {
@@ -144,6 +149,7 @@ footer {
   padding: 0.6rem 1.5rem;
   border-radius: 8px;
 }
+
 #add-channel-btn:hover {
   background-color: #e0e0e0;
 }
