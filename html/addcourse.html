@@ -44,27 +44,25 @@
             </div>
         </div>
     </nav>
+
     <main>
-        <div class="list-container">
-            <h2 class="list-heading">Course list</h2>
-            <ul class="list-item">
-                <!-- Channel items will be dynamically added here -->
-                <li class="list-box" onclick="location.href='...'">Course 1</li>
-                <li class="list-box" onclick="location.href='...'">Course 2</li>
-                <li class="list-box" onclick="location.href='...'">Course 3</li>
-            </ul>
+        <div class="form-container">
+            <h2>Add Course</h2>
+            <form id="add-course-form">
+                <label for="course-name">Course Name:</label><br />
+                <input type="text" id="course-name" name="course-name" required /><br /><br />
+                <label for="course-code">Course Code:</label><br />
+                <input type="text" id="course-code" name="course-code" required /><br /><br />
+                <input type="submit" value="Add Course" />
+            </form>
         </div>
 
-        <div class="button-container">
-            <button id="add-course-btn" class="btn btn-success" onclick="location.href='./addcourse.html'"> + Add Course</button>
-        </div>
         <button type="button" class="btn btn-secondary" onclick="history.back()">
             ← Go Back
         </button>
     </main>
 
     <site-footer></site-footer>
-
     <!------------------------------>
     <!-- Your HTML Layout go here -->
     <!------------------------------>
