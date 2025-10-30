@@ -1,44 +1,45 @@
-// src/register.js
-import { auth } from "./firebase.js";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { getFirestore, setDoc, doc } from "firebase/firestore";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap";
+// Import the functions you need from the SDKs you need
+import { eventListeners } from "@popperjs/core";
+import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-const db = getFirerestore();
-// Wait until DOM is loaded (optional but safer)
-document.addEventListener("DOMContentLoaded", () => {
-  const registerBtn = document.querySelector("#registerBtn");
-  const usernameInput = document.querySelector("#username");
-  const emailInput = document.querySelector("#email");
-  const passwordInput = document.querySelector("#password");
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAzBAo2PgeO5ZGjTHhZ335U0F0tryPCJbE",
+  authDomain: "bby01-7d3e8.firebaseapp.com",
+  projectId: "bby01-7d3e8",
+  storageBucket: "bby01-7d3e8.firebasestorage.app",
+  messagingSenderId: "709025938649",
+  appId: "1:709025938649:web:569f14030351ac6ec652c8",
+};
 
-  registerBtn.addEventListener("click", async () => {
-    e.preventDefault();
-    const username = usernameInput.value.trim();
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+//submit button
+const login = document.getElementById("loginBtn");
+const signup = document.getElementById("registerBtn");
 
-    if (!username || !email || !password) {
-      alert("Please fill in all fields!");
-      return;
-    }
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+signup.addEventListener("click", function (event) {
+  event.preventDefault();
+  //inputs
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const username = document.getElementById("username").value;
+  createUserWithEmailAndPassword(auth, email, password, username)
+    .then((userCredential) => {
+      // Signed up
       const user = userCredential.user;
-      await updateProfile(user, { displayName: username });
-      await setDoc(doc(db, "usernames", username.toLowerCase()), {
-        email: email,
-      });
-      alert(`Welcome, ${username}! Account created successfully.`);
+      alert("Creating account...");
       window.location.href = "login.html";
-    } catch (error) {
-      alert(error.message);
-    }
-  });
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      alert(errorMessage);
+      // ..
+    });
 });

@@ -7,7 +7,7 @@
 // -------------------------------------------------------------
 
 // Import the initialized Firebase Authentication object
-import { auth } from "./firebase";
+/*import { auth } from "./firebase";
 
 // Import specific functions from the Firebase Auth SDK
 import {
@@ -133,7 +133,7 @@ export function authErrorMessage(error) {
   };
 
   return map[code] || "Something went wrong. Please try again.";
-}
+}*/
 //export async function logoutUser() {
 //await signOut(auth);
 //window.location.href = "index.html";}
