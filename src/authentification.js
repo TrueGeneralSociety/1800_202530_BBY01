@@ -1,14 +1,8 @@
 // src/authentication.js
-// ------------------------------------------------------------
-// Part of the COMP1800 Projects 1 Course (BCIT).
-// Starter code provided for students to use and adapt.
-// Contains reusable Firebase Authentication functions
-// (login, signup, logout, and auth state checks).
-// -------------------------------------------------------------
-
 // Import the initialized Firebase Authentication object
 import { auth } from "./firebase";
-
+import { db } from "./firebase";
+import { doc, setDoc } from "firebase/firestore";
 // Import specific functions from the Firebase Auth SDK
 import {
   signInWithEmailAndPassword,
@@ -17,7 +11,6 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-
 // -------------------------------------------------------------
 // loginUser(email, password)
 // -------------------------------------------------------------
@@ -34,7 +27,6 @@ import {
 export async function loginUser(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
-
 // -------------------------------------------------------------
 // signupUser(name, email, password)
 // -------------------------------------------------------------
@@ -56,10 +48,21 @@ export async function signupUser(name, email, password) {
     email,
     password
   );
-  await updateProfile(userCredential.user, { displayName: name });
-  return userCredential.user;
-}
+  const user = userCredential.user; // Get the user object
+  await updateProfile(user, { displayName: name });
 
+  try {
+    await setDoc(doc(db, "users", user.uid), {
+      name: name,
+      email: email,
+    });
+    console.log("User profile created!");
+  } catch (error) {
+    console.error("Error creating user profile", error);
+  }
+
+  return user;
+}
 // -------------------------------------------------------------
 // logoutUser()
 // -------------------------------------------------------------
@@ -73,7 +76,6 @@ export async function logoutUser() {
   await signOut(auth);
   window.location.href = "index.html";
 }
-
 // -------------------------------------------------------------
 // checkAuthState()
 // -------------------------------------------------------------
@@ -101,7 +103,6 @@ export function checkAuthState() {
     }
   });
 }
-
 // -------------------------------------------------------------
 // onAuthReady(callback)
 // -------------------------------------------------------------

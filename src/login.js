@@ -1,46 +1,43 @@
-// src/loginPage.js
-// This script controls the login.html page
+// Import the functions you need from the SDKs you need
+import { eventListeners } from "@popperjs/core";
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-import { loginUser, signupUser, authErrorMessage } from "./authentification.js";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap";
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
 
-// --- Get HTML Elements ---
-const nameInput = document.querySelector("#name");
-const emailInput = document.querySelector("#email");
-const passwordInput = document.querySelector("#password");
-const loginBtn = document.querySelector("#loginBtn");
-const registerBtn = document.querySelector("#registerBtn");
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+//submit button
+const login = document.getElementById("loginBtn");
+const signup = document.getElementById("registerBtn");
 
-// --- Add Login Event ---
-loginBtn.addEventListener("click", async (e) => {
-  e.preventDefault();
-  try {
-    await loginUser(emailInput.value, passwordInput.value);
-    alert("Login successful!");
-    // Redirect to your main app page (assuming it's main.html)
-    window.location.href = "main.html";
-  } catch (error) {
-    // Use the helpful error message function!
-    alert(authErrorMessage(error));
-  }
-});
+login.addEventListener("click", function (event) {
+  event.preventDefault();
+  //inputs
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-// --- Add Register Event ---
-registerBtn.addEventListener("click", async (e) => {
-  e.preventDefault();
-  if (!nameInput.value) {
-    alert("Please enter a name to register.");
-    return;
-  }
-
-  try {
-    await signupUser(nameInput.value, emailInput.value, passwordInput.value);
-    alert("Account created successfully!");
-    // Redirect to your main app page
-    window.location.href = "main.html";
-  } catch (error) {
-    // Use the helpful error message function!
-    alert(authErrorMessage(error));
-  }
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed up
+      const user = userCredential.user;
+      alert("Loggin in...");
+      window.location.href = "main.html";
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      alert(errorMessage);
+      // ..
+    });
 });

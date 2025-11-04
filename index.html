@@ -10,7 +10,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Other libraries go here -->
-
+  <script type="module" src="/js/footer.js"></script>
+  <link rel="icon" type="image/x-icon" href="calendar.ico">
   <!-- Link to styles of your own -->
   <link rel="stylesheet" href="./styles/style.css" />
 </head>
@@ -28,7 +29,10 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active" href="#">Login</a>
+
+            <a class="nav-link active" href="/html/login/login.html">Login</a>
+
+            <a class="nav-link active" href="/html/main.html">mainpage link</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">About</a>
@@ -47,12 +51,13 @@
     </div>
   </nav>
   <div class="hero-image">
-    <img src="hero.png" />
+    <img src="bg1.svg" />
     <div class="hero-text">
       <h1>Welcome to our app</h1>
-      <button onclick="location.href='/html/login/login.html'">Sign up</button>
+      <button onclick="location.href='html/login/register.html'">Sign up</button>
     </div>
   </div>
+
 
   <footer>
     <button type="button" class="btn btn-primary btn-large position-relative">
@@ -70,9 +75,12 @@
       <span class="badge text-bg-secondary">4</span>
     </button>
     <button type="button" class="btn btn-primary btn-large position-relative">
-      <img src="svgs/person-circle.svg"  alt="profile" />
+      <img src="svgs/person-circle.svg" alt="profile" />
     </button>
   </footer>
+
+  <site-footer></site-footer>
+
 
   <!------------------------------>
   <!-- Your HTML Layout go here -->
