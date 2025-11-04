@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Other libraries go here -->
+    <script type="module" src="../js/navbar.js"></script>
     <script type="module" src="../js/footer.js"></script>
     <!-- Link to styles of your own -->
     <link rel="stylesheet" href="../styles/style.css" />
@@ -17,38 +18,12 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md custom-navbar">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="../index.html">SynCalendar</a>
+    <site-navbar></site-navbar>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Channel List</a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Setting</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./calendar.html">Calendar</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./deadline_list.html">Deadlines</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
     <main class="main">
         <div class="list-container">
-            <h1>Welcome to SynCalendar, Friend</h1>
+            <h1>Welcome to SynCalendar, <span id="userName">Friend</span></h1>
             <h2 class="list-heading">Channel list</h2>
             <ul class="list-item">
                 <!-- Channel items will be dynamically added here -->

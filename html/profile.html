@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SynCalendar</title>
+    <meta name="comp1800 template" content="My 1800 App" />
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Other libraries go here -->
+    <script type="module" src="../js/navbar.js"></script>
+    <script type="module" src="../js/footer.js"></script>
+    <!-- Link to styles of your own -->
+    <link rel="stylesheet" href="../styles/style.css" />
+</head>
+
+<body>
+    <site-navbar></site-navbar>
+
+
+    <main class="container mt-7 pt-5">
+        <h2 class="text-center mb-4">My Profile</h2>
+
+        <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+            <div class="card-body text-center">
+                <!-- Profile Picture -->
+                <img id="profilePicture" src="../images/default-avatar.png" alt="Profile Picture"
+                    class="rounded-circle mb-3" width="120" height="120" />
+
+                <h4 id="profileName" class="mb-1">John Doe</h4>
+                <p id="profileEmail" class="text-muted mb-3">johndoe@example.com</p>
+
+                <hr />
+
+                <div class="text-start">
+                    <p><strong>Phone:</strong> <span id="profilePhone">+1 234 567 890</span></p>
+                    <p><strong>Date of Birth:</strong> <span id="profileDOB">1990-01-01</span></p>
+                    <p><strong>Address:</strong> <span id="profileAddress">Vancouver, BC, Canada</span></p>
+                </div>
+
+                <button id="editProfileBtn" class="btn btn-primary mt-3">Edit Profile</button>
+            </div>
+        </div>
+    </main>
+
+    <site-footer></site-footer>
+    <!------------------------------>
+    <!-- Your HTML Layout go here -->
+    <!------------------------------>
+    <!-- Stuff for body goes here -->
+
+    <!---------------------------------------------->
+    <!-- Your own JavaScript functions go here    -->
+    <!---------------------------------------------->
+
+    <!-- Link to scripts of your own -->
+    <script type="module" src="../src/main.js"></script>
+</body>
+
+</html>
