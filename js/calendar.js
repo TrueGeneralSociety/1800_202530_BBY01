@@ -1,0 +1,66 @@
+// js/calendar.js
+// Assumes calendar.html is in /html and this file is included as type="module".
+
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+let currentDate = new Date();
+let currentMonthIndex = currentDate.getMonth();
+let currentYear = currentDate.getFullYear();
+const monthLabel = document.getElementById("month_container");
+//const yearLabel = document.getElementById("year_container");
+const daysContainer = document.querySelector(".days");
+const prevBtn = document.getElementById("prev-month");
+const nextBtn = document.getElementById("next-month");
+
+async function renderMonth(year, monthIndex) {
+  // Clear previous days
+  daysContainer.innerHTML = "";
+  // Set month and year labels
+  monthLabel.innerText = monthNames[monthIndex] + "\n" + year;
+
+  // Store {month number}.html in a variable
+  const response = await fetch(
+    "/js/fragments/2025/" + (monthIndex + 1) + ".html"
+  );
+  const htmlContent = await response.text();
+  // Insert the fetched HTML into the days container
+  daysContainer.innerHTML = htmlContent;
+}
+
+function goPrev() {
+  currentMonthIndex -= 1;
+  if (currentMonthIndex < 0) {
+    currentMonthIndex = 11;
+    currentYear -= 1;
+  }
+  renderMonth(currentYear, currentMonthIndex);
+}
+
+function goNext() {
+  currentMonthIndex += 1;
+  if (currentMonthIndex > 11) {
+    currentMonthIndex = 0;
+    currentYear += 1;
+  }
+  renderMonth(currentYear, currentMonthIndex);
+}
+
+// Wire up controls
+if (prevBtn) prevBtn.addEventListener("click", goPrev);
+if (nextBtn) nextBtn.addEventListener("click", goNext);
+
+// Initial render (start on today's month)
+renderMonth(currentYear, currentMonthIndex);

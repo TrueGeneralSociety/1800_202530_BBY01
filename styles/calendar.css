@@ -90,3 +90,9 @@ body {
   background: #1abc9c;
   color: white !important;
 }
+
+.next,
+.prev {
+  cursor: pointer;
+  user-select: none;
+}
