@@ -134,6 +134,3 @@ export function authErrorMessage(error) {
 
   return map[code] || "Something went wrong. Please try again.";
 }
-//export async function logoutUser() {
-//await signOut(auth);
-//window.location.href = "index.html";}
