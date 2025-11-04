@@ -65,6 +65,8 @@ body {
 
 .hero-image {
   align-items: center;
+  display: grid;
+  grid-template-columns: 50% 50%;
 }
 
 /* Allow main content to grow and push the footer down */
