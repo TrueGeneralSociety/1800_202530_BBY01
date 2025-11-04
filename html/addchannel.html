@@ -11,49 +11,25 @@
 
     <!-- Other libraries go here -->
     <link rel="icon" type="image/x-icon" href="/calendar.ico">
+    <script type="module" src="../js/navbar.js"></script>
     <script type="module" src="../js/footer.js"></script>
     <!-- Link to styles of your own -->
     <link rel="stylesheet" href="../styles/style.css" />
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md custom-navbar">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="../index.html">SynCalendar</a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Login</a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">What we do</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./calendar.html">Calendar</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./deadline_list.html">Deadlines</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <site-navbar></site-navbar>
 
     <main>
         <div class="form-container">
             <h2>Add Channel</h2>
             <form id="add-channel-form">
-                <label for="channel-name">Channel Name:</label><br />
+                <label for="school name">School Name:</label><br />
+                <input type="text" id="school-name" name="school-name" required /><br /><br />
+                <label for="program-name">Program Name:</label><br />
+                <input type="text" id="program-name" name="program-name" required /><br /><br />
+                <label for="channel-name">Channel name</label><br />
                 <input type="text" id="channel-name" name="channel-name" required /><br /><br />
-                <label for="channel-url">Channel URL:</label><br />
-                <input type="url" id="channel-url" name="channel-url" required /><br /><br />
                 <input type="submit" value="Add Channel" />
             </form>
         </div>

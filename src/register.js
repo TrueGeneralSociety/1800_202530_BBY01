@@ -1,43 +1,30 @@
-// Import the functions you need from the SDKs you need
-import { eventListeners } from "@popperjs/core";
-import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// Import Firebase auth from your firebase.js
+import { auth } from "/src/firebase.js"; // adjust the path to firebase.js
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-//submit button
-const login = document.getElementById("loginBtn");
+// DOM elements
 const signup = document.getElementById("registerBtn");
 
-signup.addEventListener("click", function (event) {
+signup.addEventListener("click", async (event) => {
   event.preventDefault();
-  //inputs
+
+  // Inputs
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   const username = document.getElementById("username").value;
-  createUserWithEmailAndPassword(auth, email, password, username)
-    .then((userCredential) => {
-      // Signed up
-      const user = userCredential.user;
-      alert("Creating account...");
-      window.location.href = "login.html";
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      alert(errorMessage);
-      // ..
-    });
+
+  try {
+    // Create user
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Set display name
+    await updateProfile(user, { displayName: username });
+
+    alert("Account created successfully!");
+    window.location.href = "/html/login/login.html"; // redirect to login page
+  } catch (error) {
+    alert(error.message);
+  }
 });
+
