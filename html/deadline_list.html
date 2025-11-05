@@ -1,52 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>SynCalendar</title>
+    <meta name="comp1800 template" content="My 1800 App" />
 
-<head>
-  <title>SynCalendar</title>
-  <meta name="comp1800 template" content="My 1800 App" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Required meta tags -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Other libraries go here -->
+    <link rel="icon" type="image/x-icon" href="/calendar.ico" />
 
-  <!-- Other libraries go here -->
-  <link rel="icon" type="image/x-icon" href="/calendar.ico">
-  <script type="module" src="../js/navbar.js"></script>
-  <script type="module" src="../js/footer.js"></script>
-  <!-- Link to styles of your own -->
-  <link rel="stylesheet" href="../styles/style.css" />
-</head>
+    <!-- Components -->
+    <script type="module" src="../js/navbar.js"></script>
+    <script type="module" src="../js/footer.js"></script>
 
-<body>
-  <site-navbar></site-navbar>
+    <!-- Link to styles of your own -->
+    <link rel="stylesheet" href="../styles/style.css" />
+  </head>
 
-  <main>
-    <h1>Deadlines</h1>
-    <ul class="list-group" id="deadline-list">
-      <!-- Deadline items will be dynamically inserted here -->
-      <li class="list-group-item">Deadline</li>
-      <li class="list-group-item list-group-item-warning">Nearby deadline</li>
-      <li class="list-group-item list-group-item-danger">Missed deadline</li>
-      <li class="list-group-item list-group-item-success">
-        Checked and met deadline
-      </li>
-      <li class="list-group-item">Vestibulum at eros</li>
-    </ul>
-  </main>
+  <body>
+    <site-navbar></site-navbar>
 
-  <site-footer></site-footer>
+    <main>
+      <h1>Deadlines</h1>
+      <ul class="list-group" id="deadline-list">
+        <!-- Deadline items will be dynamically inserted here -->
+        <li class="list-group-item">Deadline</li>
+        <li class="list-group-item list-group-item-warning">Nearby deadline</li>
+        <li class="list-group-item list-group-item-danger">Missed deadline</li>
+        <li class="list-group-item list-group-item-success">
+          Checked and met deadline
+        </li>
+        <li class="list-group-item">Vestibulum at eros</li>
+      </ul>
+    </main>
 
-  <!------------------------------>
-  <!-- Your HTML Layout go here -->
-  <!------------------------------>
-  <!-- Stuff for body goes here -->
+    <div id="add_deadline">
+      <a href="addDeadline.html" class="btn btn-primary" role="button"
+        >Add Deadline</a
+      >
+    </div>
 
-  <!---------------------------------------------->
-  <!-- Your own JavaScript functions go here    -->
-  <!---------------------------------------------->
+    <site-footer></site-footer>
 
-  <!-- Link to scripts of your own -->
-  <script type="module" src="../src/main.js"></script>
-</body>
+    <!------------------------------>
+    <!-- Your HTML Layout go here -->
+    <!------------------------------>
+    <!-- Stuff for body goes here -->
 
+    <!---------------------------------------------->
+    <!-- Your own JavaScript functions go here    -->
+    <!---------------------------------------------->
+
+    <!-- Link to scripts of your own -->
+    <script type="module" src="../src/main.js"></script>
+  </body>
 </html>
