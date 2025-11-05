@@ -13,7 +13,7 @@ class SiteFooter extends HTMLElement {
         <span class="visually-hidden">unread messages</span>
       </span>
     </button>
-    <button type="button" class="btn btn-primary btn-large position-relative">
+    <button type="button" onclick="location.href='../html/notification.html'" class="btn btn-primary btn-large position-relative">
       <img src="/svgs/bell-fill.svg" alt="Notifications" />
       <span class="badge text-bg-secondary">4</span>
     </button>
@@ -26,5 +26,4 @@ class SiteFooter extends HTMLElement {
 }
 
 // Register the custom element
-customElements.define('site-footer', SiteFooter);
-
+customElements.define("site-footer", SiteFooter);
