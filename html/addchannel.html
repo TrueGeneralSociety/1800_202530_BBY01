@@ -21,18 +21,36 @@
     <site-navbar></site-navbar>
 
     <main>
-        <div class="form-container">
-            <h2>Add Channel</h2>
-            <form id="add-channel-form">
-                <label for="school name">School Name:</label><br />
-                <input type="text" id="school-name" name="school-name" required /><br /><br />
-                <label for="program-name">Program Name:</label><br />
-                <input type="text" id="program-name" name="program-name" required /><br /><br />
-                <label for="channel-name">Channel name</label><br />
-                <input type="text" id="channel-name" name="channel-name" required /><br /><br />
-                <input type="submit" value="Add Channel" />
-            </form>
-        </div>
+        <form id="add-channel-form">
+            <label for="school">School:</label><br />
+            <select id="school-select" name="school">
+                <option value="">-- Select Existing School --</option>
+            </select>
+            <br />
+            <label for="school-input">Or enter new school:</label><br />
+            <input type="text" id="school-input" name="school-input" placeholder="Enter new school name" />
+            <br /><br />
+
+            <label for="program">Program:</label><br />
+            <select id="program-select" name="program">
+                <option value="">-- Select Existing Program --</option>
+            </select>
+            <br />
+            <label for="program-input">Or enter new program:</label><br />
+            <input type="text" id="program-input" name="program-input" placeholder="Enter new program name" />
+            <br /><br />
+
+            <label for="term">Program:</label><br />
+            <select id="term-select" name="term">
+                <option value="">-- Select Existing term --</option>
+            </select>
+            <br />
+            <label for="term-input">Or enter new term:</label><br />
+            <input type="text" id="term-input" name="term-input" placeholder="Enter new term name" />
+            <br /><br />
+
+            <input type="submit" value="Add Channel" />
+        </form>
 
         <button type="button" class="btn btn-secondary" onclick="history.back()">
             ← Go Back
@@ -50,7 +68,9 @@
     <!---------------------------------------------->
 
     <!-- Link to scripts of your own -->
-    <script type="module" src="../src/main.js"></script>
+    <script type="module" src="../src/addchannel.js"></script>
+
+
 </body>
 
 </html>
