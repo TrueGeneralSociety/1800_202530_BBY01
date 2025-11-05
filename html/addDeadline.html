@@ -8,16 +8,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Bootstrap -->
-    <script type="module" src="../src/app.js"></script>
-
-    <!-- Link to components -->
-    <!-- <script type="module" src="../js/navbar.js"></script>  -->
-    <script type="module" src="../js/footer.js"></script>
+    <!-- Other libraries go here -->
+    <script type="module" src="./src/app.js"></script>
 
     <!-- Link to styles of your own -->
-    <link rel="stylesheet" href="../styles/style.css" />
-    <link rel="stylesheet" href="../styles/calendar.css" />
+    <link rel="stylesheet" href="./styles/style.css" />
   </head>
 
   <body>
@@ -57,35 +52,7 @@
       </div>
     </nav>
 
-    <!-- Calendar format taken from W3Schools -->
-    <main>
-      <div class="month">
-        <ul>
-          <li class="prev" id="prev-month">&#10094;</li>
-          <li class="next" id="next-month">&#10095;</li>
-          <li id="month_container">
-            <!-- Filled in by script -->
-          </li>
-        </ul>
-      </div>
-
-      <ul class="weekdays">
-        <li>Mo</li>
-        <li>Tu</li>
-        <li>We</li>
-        <li>Th</li>
-        <li>Fr</li>
-        <li>Sa</li>
-        <li>Su</li>
-      </ul>
-
-      <ul class="days">
-        <!-- Add in using calendar.js -->
-      </ul>
-    </main>
-
     <site-footer></site-footer>
-
     <!------------------------------>
     <!-- Your HTML Layout go here -->
     <!------------------------------>
@@ -94,8 +61,5 @@
     <!---------------------------------------------->
     <!-- Your own JavaScript functions go here    -->
     <!---------------------------------------------->
-
-    <!-- Link to scripts of your own -->
-    <script type="module" src="../js/calendar.js"></script>
   </body>
 </html>

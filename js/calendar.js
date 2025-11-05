@@ -33,7 +33,7 @@ async function renderMonth(year, monthIndex) {
 
   // Store {month number}.html in a variable
   const response = await fetch(
-    "/js/fragments/2025/" + (monthIndex + 1) + ".html"
+    "/js/fragments/" + year + "/" + (monthIndex + 1) + ".html"
   );
   const htmlContent = await response.text();
   // Insert the fetched HTML into the days container
@@ -41,6 +41,9 @@ async function renderMonth(year, monthIndex) {
 }
 
 function goPrev() {
+  if (currentYear <= 2025 && currentMonthIndex === 0) {
+    return;
+  }
   currentMonthIndex -= 1;
   if (currentMonthIndex < 0) {
     currentMonthIndex = 11;
@@ -50,6 +53,9 @@ function goPrev() {
 }
 
 function goNext() {
+  if (currentYear >= 2027 && currentMonthIndex === 11) {
+    return;
+  }
   currentMonthIndex += 1;
   if (currentMonthIndex > 11) {
     currentMonthIndex = 0;
