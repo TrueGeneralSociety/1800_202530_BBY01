@@ -2,8 +2,11 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/styles/login.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/calendar.ico">
+    <script type="module" src="/src/register.js" defer></script>
     <title>Login</title>
 </head>
 
@@ -11,18 +14,19 @@
     <h2>Login Page</h2>
     <form>
         <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" required>
         </div>
         <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="password">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" required>
         </div>
-        <button id="loginBtn" class="loginbtn btn-primary">Login</button>
-        <button id="registerBtn" class="registerbtn btn-primary"><a href="./register.html">Register</a></button>
+        <button type="submit" id="loginBtn" class="loginbtn btn-primary">Login</button>
+        <button onclick="location.href='register.html'" type="button" id="registerBtn"
+            class="registerbtn btn-primary">Register</button>
     </form>
 
-    <script type="module" src="../src/login.js"></script>
+    <script type="module" src="/src/login.js"></script>
 </body>
 
 </html>

@@ -20,6 +20,25 @@
 <body>
     <site-navbar></site-navbar>
 
+    <main>
+        <div class="form-container">
+            <h2>Add Channel</h2>
+            <form id="add-channel-form">
+                <label for="school name">School Name:</label><br />
+                <input type="text" id="school-name" name="school-name" required /><br /><br />
+                <label for="program-name">Program Name:</label><br />
+                <input type="text" id="program-name" name="program-name" required /><br /><br />
+                <label for="channel-name">Channel name</label><br />
+                <input type="text" id="channel-name" name="channel-name" required /><br /><br />
+                <input type="submit" value="Add Channel" />
+            </form>
+        </div>
+
+        <button type="button" class="btn btn-secondary" onclick="history.back()">
+            ← Go Back
+        </button>
+    </main>
+
     <site-footer></site-footer>
     <!------------------------------>
     <!-- Your HTML Layout go here -->

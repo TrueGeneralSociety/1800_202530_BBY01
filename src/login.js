@@ -1,46 +1,20 @@
-// src/loginPage.js
-// This script controls the login.html page
+import { auth } from "/src/firebase.js";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-import { loginUser, signupUser, authErrorMessage } from "./authentification.js";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap";
+// DOM elements
+const loginBtn = document.getElementById("loginBtn");
 
-// --- Get HTML Elements ---
-const nameInput = document.querySelector("#name");
-const emailInput = document.querySelector("#email");
-const passwordInput = document.querySelector("#password");
-const loginBtn = document.querySelector("#loginBtn");
-const registerBtn = document.querySelector("#registerBtn");
+loginBtn.addEventListener("click", async (event) => {
+  event.preventDefault();
 
-// --- Add Login Event ---
-loginBtn.addEventListener("click", async (e) => {
-  e.preventDefault();
-  try {
-    await loginUser(emailInput.value, passwordInput.value);
-    alert("Login successful!");
-    // Redirect to your main app page (assuming it's main.html)
-    window.location.href = "main.html";
-  } catch (error) {
-    // Use the helpful error message function!
-    alert(authErrorMessage(error));
-  }
-});
-
-// --- Add Register Event ---
-registerBtn.addEventListener("click", async (e) => {
-  e.preventDefault();
-  if (!nameInput.value) {
-    alert("Please enter a name to register.");
-    return;
-  }
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
   try {
-    await signupUser(nameInput.value, emailInput.value, passwordInput.value);
-    alert("Account created successfully!");
-    // Redirect to your main app page
-    window.location.href = "main.html";
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    alert("Logging in...");
+    window.location.href = "/html/main.html";
   } catch (error) {
-    // Use the helpful error message function!
-    alert(authErrorMessage(error));
+    alert(error.message);
   }
 });

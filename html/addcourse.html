@@ -20,6 +20,23 @@
 <body>
     <site-navbar></site-navbar>
 
+    <main>
+        <div class="form-container">
+            <h2>Add Course</h2>
+            <form id="add-course-form">
+                <label for="course-name">Course Name:</label><br />
+                <input type="text" id="course-name" name="course-name" required /><br /><br />
+                <label for="course-code">Course Code:</label><br />
+                <input type="text" id="course-code" name="course-code" required /><br /><br />
+                <input type="submit" value="Add Course" />
+            </form>
+        </div>
+
+        <button type="button" class="btn btn-secondary" onclick="history.back()">
+            ← Go Back
+        </button>
+    </main>
+
     <site-footer></site-footer>
     <!------------------------------>
     <!-- Your HTML Layout go here -->

@@ -3,30 +3,33 @@
 
 <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/styles/register.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/calendar.ico">
     <title>Register</title>
+    <script type="module" src="/src/register.js" defer></script>
 </head>
 
 <body>
     <h2>Create an Account </h2>
     <form>
         <div class="form-group">
-            <label for="exampleInputEmail1">User name</label>
-            <input type="text" class="form-control" id="username">
+            <label for="username">User name</label>
+            <input type="text" class="form-control" id="username" required>
         </div>
         <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" required>
         </div>
         <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="password">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" required>
         </div>
         <small>Already have an account? <a href="./login.html">Login here</a></small>
         <button id="registerBtn" class="registerbtn btn-primary">Register</button>
 
     </form>
-    <script type="module" src="../src/register.js"></script>
+
 </body>
 
 </html>
