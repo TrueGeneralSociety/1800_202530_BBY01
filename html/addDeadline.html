@@ -17,7 +17,6 @@
 
     <!-- Link to styles of your own -->
     <link rel="stylesheet" href="../styles/style.css" />
-    <link rel="stylesheet" href="../styles/calendar.css" />
   </head>
 
   <body>
@@ -52,55 +51,57 @@
             <li class="nav-item">
               <a class="nav-link" href="./deadline_list.html">Deadlines</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="./addDeadline.html"
-                >Add deadline (temporary)</a
-              >
-            </li>
           </ul>
         </div>
       </div>
     </nav>
 
-    <!-- Calendar format taken from W3Schools -->
     <main>
-      <div class="month">
-        <ul>
-          <li class="prev" id="prev-month">&#10094;</li>
-          <li class="next" id="next-month">&#10095;</li>
-          <li id="month_container">
-            <!-- Filled in by script -->
-          </li>
-        </ul>
-      </div>
+      <form style="padding: 10px">
+        <fieldset>
+          <legend>Add deadline</legend>
 
-      <ul class="weekdays">
-        <li>Mo</li>
-        <li>Tu</li>
-        <li>We</li>
-        <li>Th</li>
-        <li>Fr</li>
-        <li>Sa</li>
-        <li>Su</li>
-      </ul>
-
-      <ul class="days">
-        <!-- Add in using calendar.js -->
-      </ul>
+          <div class="mb-3">
+            <label for="taskName" class="form-label">Task Name:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="taskName"
+              aria-describedby="emailHelp"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="deadlineDateTime" class="form-label"
+              >Date and Time:</label
+            >
+            <input
+              type="datetime-local"
+              class="form-control"
+              id="deadlineDateTime"
+            />
+          </div>
+          <label for="courseSelect" class="form-label">Course:</label>
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            style="margin-bottom: 10px"
+          >
+            <option selected>Select course</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </select>
+        </fieldset>
+        <button type="submit" class="btn btn-primary" id="resetBtn">
+          Submit
+        </button>
+        <button type="reset">Reset</button>
+      </form>
     </main>
 
     <site-footer></site-footer>
-
-    <!------------------------------>
-    <!-- Your HTML Layout go here -->
-    <!------------------------------>
-    <!-- Stuff for body goes here -->
-
     <!---------------------------------------------->
     <!-- Your own JavaScript functions go here    -->
     <!---------------------------------------------->
-
-    <!-- Link to scripts of your own -->
-    <script type="module" src="../js/calendar.js"></script>
   </body>
 </html>
