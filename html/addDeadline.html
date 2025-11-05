@@ -9,10 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Other libraries go here -->
-    <script type="module" src="./src/app.js"></script>
+    <script type="module" src="../src/app.js"></script>
 
     <!-- Link to styles of your own -->
-    <link rel="stylesheet" href="./styles/style.css" />
+    <link rel="stylesheet" href="../styles/style.css" />
   </head>
 
   <body>
@@ -52,12 +52,50 @@
       </div>
     </nav>
 
-    <site-footer></site-footer>
-    <!------------------------------>
-    <!-- Your HTML Layout go here -->
-    <!------------------------------>
-    <!-- Stuff for body goes here -->
+    <main>
+      <form style="padding: 10px">
+        <fieldset>
+          <legend>Add deadline</legend>
 
+          <div class="mb-3">
+            <label for="taskName" class="form-label">Task Name:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="taskName"
+              aria-describedby="emailHelp"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="deadlineDateTime" class="form-label"
+              >Date and Time:</label
+            >
+            <input
+              type="datetime-local"
+              class="form-control"
+              id="deadlineDateTime"
+            />
+          </div>
+          <label for="courseSelect" class="form-label">Course:</label>
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            style="margin-bottom: 10px"
+          >
+            <option selected>Select course</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </select>
+        </fieldset>
+        <button type="submit" class="btn btn-primary" id="resetBtn">
+          Submit
+        </button>
+        <button type="reset">Reset</button>
+      </form>
+    </main>
+
+    <site-footer></site-footer>
     <!---------------------------------------------->
     <!-- Your own JavaScript functions go here    -->
     <!---------------------------------------------->
