@@ -11,8 +11,12 @@ loginBtn.addEventListener("click", async (event) => {
   const password = document.getElementById("password").value;
 
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    alert("Logging in...");
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
     window.location.href = "/html/main.html";
   } catch (error) {
     alert(error.message);
