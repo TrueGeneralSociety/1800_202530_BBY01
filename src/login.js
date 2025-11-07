@@ -1,24 +1,33 @@
 import { auth } from "/src/firebase.js";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 
-// DOM elements
-const loginBtn = document.getElementById("loginBtn");
+// Wait until DOM is fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+  const loginBtn = document.getElementById("loginBtn");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
 
-loginBtn.addEventListener("click", async (event) => {
-  event.preventDefault();
+  if (!loginBtn || !emailInput || !passwordInput) return;
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  // 🔹 Auto-redirect if user is already logged in
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      window.location.href = "/html/main.html"; // already logged in
+    }
+  });
 
-  try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+  // 🔹 Login form handler
+  loginBtn.addEventListener("click", async (event) => {
+    event.preventDefault(); // prevent form submission
 
-    window.location.href = "/html/main.html";
-  } catch (error) {
-    alert(error.message);
-  }
+    const email = emailInput.value;
+    const password = passwordInput.value;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      window.location.href = "/html/main.html";
+    } catch (error) {
+      alert(error.message);
+    }
+  });
 });
