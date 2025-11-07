@@ -25,9 +25,13 @@
             <h2>Add Course</h2>
             <form id="add-course-form">
                 <label for="course-name">Course Name:</label><br />
-                <input type="text" id="course-name" name="course-name" required /><br /><br />
-                <label for="course-code">Course Code:</label><br />
-                <input type="text" id="course-code" name="course-code" required /><br /><br />
+                <select id="course-select" name="course">
+                    <option value="">-- Select Existing Course --</option>
+                </select>
+                <br />
+                <label for="course-input">Or enter new course:</label><br />
+                <input type="text" id="course-input" name="course-input" placeholder="Enter new course" />
+                <br /><br />
                 <input type="submit" value="Add Course" />
             </form>
         </div>
@@ -48,7 +52,7 @@
     <!---------------------------------------------->
 
     <!-- Link to scripts of your own -->
-    <script type="module" src="../src/main.js"></script>
+    <script type="module" src="/src/addcourse.js"></script>
 </body>
 
 </html>

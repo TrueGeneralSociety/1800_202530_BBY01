@@ -174,8 +174,6 @@ onAuthStateChanged(auth, (user) => {
         isDeleted: false,
       });
 
-
-      alert('Channel added successfully!');
       window.location.href = '../html/main.html';
 
     } catch (error) {

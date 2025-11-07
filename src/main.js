@@ -4,18 +4,16 @@ import { auth, db } from './firebase.js';
 import { collection, getDocs, onSnapshot, doc, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
-const userNameEl = document.getElementById('userName');
-const listContainer = document.querySelector('.list-item');
+document.addEventListener('DOMContentLoaded', () => {
+  const userNameEl = document.getElementById('userName');
+  const listContainer = document.querySelector('.list-item');
 
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.href = '../index.html';
+  if (!listContainer) {
+    console.error('Channel list container not found in DOM');
     return;
   }
 
-  userNameEl.textContent = user.displayName || user.email;
-
-  // ✅ Soft delete function (marks as deleted instead of removing)
+  // Soft-delete a channel
   async function deleteChannel(schoolName, programName, termName, channelName) {
     if (!confirm(`Are you sure you want to delete the channel "${channelName}"? This will hide it but keep its data.`))
       return;
@@ -33,7 +31,6 @@ onAuthStateChanged(auth, (user) => {
         channelName
       );
 
-      // Mark channel as deleted instead of removing it
       await setDoc(
         channelRef,
         { isDeleted: true, deletedAt: new Date().toISOString() },
@@ -47,95 +44,106 @@ onAuthStateChanged(auth, (user) => {
     }
   }
 
-  // ✅ Load all channels created by the current user
-  async function loadChannels() {
-    listContainer.innerHTML = ''; // Clear list
-    let channelsExist = false;
+  // Load channels for the current user
+  async function loadChannels(user) {
+    listContainer.innerHTML = '';
 
-    const schoolsSnapshot = await getDocs(collection(db, 'schools'));
+    try {
+      const schoolsSnapshot = await getDocs(collection(db, 'schools'));
 
-    for (const schoolDoc of schoolsSnapshot.docs) {
-      const schoolName = schoolDoc.id;
-      const programsSnapshot = await getDocs(collection(db, 'schools', schoolName, 'programs'));
+      for (const schoolDoc of schoolsSnapshot.docs) {
+        const schoolName = schoolDoc.id;
+        const programsSnapshot = await getDocs(collection(db, 'schools', schoolName, 'programs'));
 
-      for (const programDoc of programsSnapshot.docs) {
-        const programName = programDoc.id;
-        const termsSnapshot = await getDocs(
-          collection(db, 'schools', schoolName, 'programs', programName, 'terms')
-        );
-
-        for (const termDoc of termsSnapshot.docs) {
-          const termName = termDoc.id;
-          const channelsRef = collection(
-            db,
-            'schools',
-            schoolName,
-            'programs',
-            programName,
-            'terms',
-            termName,
-            'channels'
+        for (const programDoc of programsSnapshot.docs) {
+          const programName = programDoc.id;
+          const termsSnapshot = await getDocs(
+            collection(db, 'schools', schoolName, 'programs', programName, 'terms')
           );
 
-          // Real-time listener for channels in this term
-          onSnapshot(channelsRef, (channelsSnapshot) => {
-            // Remove existing items from this term before re-rendering
-            channelsSnapshot.docChanges().forEach((change) => {
-              const channelName = change.doc.id;
-              const channelData = change.doc.data();
-              const id = `${schoolName}-${programName}-${termName}-${channelName}`;
+          for (const termDoc of termsSnapshot.docs) {
+            const termName = termDoc.id;
+            const channelsRef = collection(
+              db,
+              'schools',
+              schoolName,
+              'programs',
+              programName,
+              'terms',
+              termName,
+              'channels'
+            );
 
-              if (change.type === 'added') {
-                if (channelData.createdBy === user.uid && !channelData.isDeleted) {
-                  channelsExist = true;
-                  if (document.getElementById(id)) return; // Avoid duplicates
+            // Use real-time listener for updates
+            onSnapshot(channelsRef, (snapshot) => {
+              snapshot.docChanges().forEach((change) => {
+                const chName = change.doc.id;
+                const chData = change.doc.data();
+                const liId = `${schoolName}-${programName}-${termName}-${chName}`;
 
-                  const li = document.createElement('li');
-                  li.className = 'list-box';
-                  li.id = id;
+                // Handle added or modified channels
+                if ((change.type === 'added' || change.type === 'modified') && chData.createdBy === user.uid && !chData.isDeleted) {
+                  if (!document.getElementById(liId)) {
+                    const li = document.createElement('li');
+                    li.className = 'list-box';
+                    li.id = liId;
+                    li.style.cursor = 'pointer';
 
-                  // Channel name (click to open)
-                  const nameSpan = document.createElement('span');
-                  nameSpan.textContent = channelName;
-                  nameSpan.style.cursor = 'pointer';
-                  nameSpan.onclick = () => {
-                    window.location.href = `./channel.html?school=${encodeURIComponent(
-                      schoolName
-                    )}&program=${encodeURIComponent(programName)}&term=${encodeURIComponent(
-                      termName
-                    )}&channel=${encodeURIComponent(channelName)}`;
-                  };
+                    li.onclick = () => {
+                      window.location.href = `/html/channel.html?school=${encodeURIComponent(schoolName)}&program=${encodeURIComponent(programName)}&term=${encodeURIComponent(termName)}&channel=${encodeURIComponent(chName)}`;
+                    };
 
-                  // Delete button
-                  const deleteBtn = document.createElement('button');
-                  deleteBtn.textContent = '🗑️';
-                  deleteBtn.className = 'btn btn-sm btn-danger ms-2';
-                  deleteBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    deleteChannel(schoolName, programName, termName, channelName);
-                  };
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = chName;
 
-                  li.appendChild(nameSpan);
-                  li.appendChild(deleteBtn);
-                  listContainer.appendChild(li);
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = '🗑️';
+                    deleteBtn.className = 'btn btn-sm btn-danger ms-2';
+                    deleteBtn.onclick = async (e) => {
+                      e.stopPropagation();
+                      await deleteChannel(schoolName, programName, termName, chName);
+                      li.remove();
+                    };
+
+                    li.appendChild(nameSpan);
+                    li.appendChild(deleteBtn);
+                    listContainer.appendChild(li);
+                  }
                 }
-              }
 
-              // Remove if deleted
-              if (change.type === 'removed' || (channelData?.isDeleted && document.getElementById(id))) {
-                document.getElementById(id)?.remove();
+                // Remove deleted channels
+                if (chData.isDeleted && document.getElementById(liId)) {
+                  document.getElementById(liId).remove();
+                }
+              });
+
+              // Placeholder if no channels
+              if (listContainer.children.length === 0) {
+                listContainer.innerHTML = '<li>No channels found for you. Add a new one!</li>';
               }
             });
-
-            // Update placeholder message if needed
-            if (!channelsExist && listContainer.children.length === 0) {
-              listContainer.innerHTML = '<li>No channels found for you. Add a new one!</li>';
-            }
-          });
+          }
         }
       }
+    } catch (err) {
+      console.error('Error loading channels:', err);
+      listContainer.innerHTML = '<li>Failed to load channels.</li>';
     }
   }
 
-  loadChannels();
+  // Auth state listener
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = '/index.html';
+      return;
+    }
+
+    // Set user name safely
+    if (userNameEl) {
+      userNameEl.textContent = user.displayName || user.email || 'Friend';
+    }
+
+    // Load the channels
+    loadChannels(user);
+  });
 });
