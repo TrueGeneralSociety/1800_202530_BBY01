@@ -85,6 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
               li.id = liId;
               li.style.cursor = 'default'; // courses may not navigate
 
+              li.onclick = () => {
+                      window.location.href = `/html/course.html?school=${encodeURIComponent(schoolName)}&program=${encodeURIComponent(programName)}&term=${encodeURIComponent(termName)}&channel=${encodeURIComponent(channelName)}&course=${encodeURIComponent(courseName)}`;
+                    };
+
               const nameSpan = document.createElement('span');
               nameSpan.textContent = courseName;
 
