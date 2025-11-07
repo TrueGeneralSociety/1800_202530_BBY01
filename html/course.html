@@ -21,21 +21,17 @@
     <site-navbar></site-navbar>
 
     <main>
-        <div class="form-container">
-            <h2>Add Course</h2>
-            <form id="add-course-form">
-                <label for="course-name">Course Name:</label><br />
-                <select id="course-select" name="course">
-                    <option value="">-- Select Existing Course --</option>
-                </select>
-                <br />
-                <label for="course-input">Or enter new course:</label><br />
-                <input type="text" id="course-input" name="course-input" placeholder="Enter new course" />
-                <br /><br />
-                <input type="submit" value="Add Course" />
-            </form>
+        <div class="list-container">
+            <h2 class="list-heading">dealine list</h2>
+            <ul class="list-item">
+                <!-- Channel items will be dynamically added here -->
+            </ul>
         </div>
 
+        <div class="button-container">
+            <button id="add-deadline-btn" class="btn btn-success"> + Add
+                Deadline</button>
+        </div>
         <button type="button" class="btn btn-secondary" onclick="history.back()">
             ← Go Back
         </button>
@@ -52,7 +48,7 @@
     <!---------------------------------------------->
 
     <!-- Link to scripts of your own -->
-    <script type="module" src="/src/addcourse.js"></script>
+    <script type="module" src="../src/course.js"></script>
 </body>
 
 </html>
