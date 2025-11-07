@@ -3,6 +3,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 class SiteNavbar extends HTMLElement {
   connectedCallback() {
+    this.innerHTML = '<nav class="navbar navbar-expand-md custom-navbar"><div class="container-fluid">Loading...</div></nav>';
     this.renderNavbar();
   }
 
@@ -10,10 +11,13 @@ class SiteNavbar extends HTMLElement {
     onAuthStateChanged(auth, (user) => {
       const isLoggedIn = !!user;
 
+      // Set logo link based on auth state
+      const logoHref = isLoggedIn ? '/html/main.html' : '/index.html';
+
       this.innerHTML = `
         <nav class="navbar navbar-expand-md custom-navbar">
           <div class="container-fluid">
-            <a class="navbar-brand" href="../index.html">SynCalendar</a>
+            <a class="navbar-brand" href="${logoHref}">SynCalendar</a>
 
             <button
               class="navbar-toggler"
@@ -30,16 +34,16 @@ class SiteNavbar extends HTMLElement {
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                  <a class="nav-link" href="./profile.html">Profile</a>
+                  <a class="nav-link" href="/html/profile.html">Profile</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">What we do</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="./calendar.html">Calendar</a>
+                  <a class="nav-link" href="/html/calendar.html">Calendar</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="./deadline_list.html">Deadlines</a>
+                  <a class="nav-link" href="/html/deadline_list.html">Deadlines</a>
                 </li>
               </ul>
 
@@ -50,7 +54,7 @@ class SiteNavbar extends HTMLElement {
                   </li>
                 ` : `
                   <li class="nav-item">
-                    <a class="nav-link" href="#" id="login-btn">Login</a>
+                    <a class="nav-link" href="/html/login/login.html" id="login-btn">Login</a>
                   </li>
                 `}
               </ul>
@@ -59,40 +63,32 @@ class SiteNavbar extends HTMLElement {
         </nav>
       `;
 
-      // 🔹 Attach logout listener
-      const logoutBtn = this.querySelector("#logout-btn");
+      // Logout button listener
+      const logoutBtn = this.querySelector('#logout-btn');
       if (logoutBtn) {
-        logoutBtn.addEventListener("click", async () => {
+        logoutBtn.addEventListener('click', async () => {
           try {
             await signOut(auth);
-            window.location.href = "../index.html";
+            window.location.href = '/index.html';
           } catch (error) {
-            console.error("Logout failed:", error);
+            console.error('Logout failed:', error);
           }
         });
       }
 
-      // Login button just redirects to login page, no signOut
-      const loginBtn = this.querySelector("#login-btn");
-      if (loginBtn) {
-        loginBtn.addEventListener("click", () => {
-          window.location.href = "./html/login/login.html"; // redirect to login
-        });
-      }
-
-      // 🔍 Highlight the active page
-      const currentPage = window.location.pathname.split("/").pop();
-      const navLinks = this.querySelectorAll(".nav-link");
+      // Highlight current page
+      const currentPage = window.location.pathname.split('/').pop();
+      const navLinks = this.querySelectorAll('.nav-link');
       navLinks.forEach((link) => {
-        const href = link.getAttribute("href");
+        const href = link.getAttribute('href');
         if (href && href.includes(currentPage)) {
-          link.classList.add("active");
+          link.classList.add('active');
         } else {
-          link.classList.remove("active");
+          link.classList.remove('active');
         }
       });
     });
   }
 }
 
-customElements.define("site-navbar", SiteNavbar);
+customElements.define('site-navbar', SiteNavbar);
