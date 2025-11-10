@@ -1,77 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>SynCalendar</title>
-    <meta name="comp1800 template" content="My 1800 App" />
 
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <title>SynCalendar</title>
+  <meta name="comp1800 template" content="My 1800 App" />
 
-    <!-- Bootstrap -->
-    <script type="module" src="../src/app.js"></script>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Link to components -->
-    <script type="module" src="../js/navbar.js"></script>
-    <script type="module" src="../js/footer.js"></script>
+  <!-- Bootstrap -->
+  <script type="module" src="../src/app.js"></script>
 
-    <!-- Link to styles of your own -->
-    <link rel="stylesheet" href="../styles/style.css" />
-  </head>
+  <!-- Link to components -->
+  <script type="module" src="../js/navbar.js"></script>
+  <script type="module" src="../js/footer.js"></script>
 
-  <body>
-    <site-navbar></site-navbar>
+  <!-- Link to styles of your own -->
+  <link rel="stylesheet" href="../styles/style.css" />
+</head>
+
+<body>
+  <site-navbar></site-navbar>
 
     <main>
       <form>
         <fieldset>
           <legend>Add deadline</legend>
 
-          <div class="mb-3">
-            <label for="taskName" class="form-label">Task Name:</label>
-            <input
-              type="text"
-              class="form-control"
-              id="taskName"
-              aria-describedby="emailHelp"
-            />
-          </div>
-          <div class="mb-3">
-            <label for="deadlineDateTime" class="form-label"
-              >Date and Time:</label
-            >
-            <input
-              type="datetime-local"
-              class="form-control"
-              id="deadlineDateTime"
-            />
-          </div>
-          <label for="courseSelect" class="form-label">Course:</label>
-          <select
-            class="form-select"
-            aria-label="Default select example"
-            style="margin-bottom: 10px"
-            id="courseSelect"
-          >
-            <option selected>Select course</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-          </select>
-        </fieldset>
-        <button type="submit" class="btn btn-primary" id="submitBtn">
+        <div class="mb-3">
+          <label for="taskName" class="form-label">Task Name:</label>
+          <input type="text" class="form-control" id="taskName" aria-describedby="emailHelp" />
+        </div>
+        <div class="mb-3">
+          <label for="deadlineDateTime" class="form-label">Date and Time:</label>
+          <input type="datetime-local" class="form-control" id="deadlineDateTime" />
+        </div>
+
+        <div class="mb-3">
+          <label for="additionalNotes" class="form-label">Additional Notes:</label>
+          <textarea class="form-control" id="additionalNotes" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" id="resetBtn">
           Submit
         </button>
-        <button type="reset" class="btn btn-primary" id="resetBtn">
-          Reset
-        </button>
-      </form>
-    </main>
+        <button type="reset">Reset</button>
+    </form>
 
-    <site-footer></site-footer>
-    <!---------------------------------------------->
-    <!-- Your own JavaScript functions go here    -->
-    <!---------------------------------------------->
-    <script type="module" src="../src/deadline.js"></script>
-  </body>
+    <button type="button" class="btn btn-secondary" onclick="history.back()">
+      ← Go Back
+    </button>
+  </main>
+
+  <site-footer></site-footer>
+  <!---------------------------------------------->
+  <!-- Your own JavaScript functions go here    -->
+  <!---------------------------------------------->
+  <script type="module" src="../src/addDeadline.js"></script>
+</body>
+
 </html>

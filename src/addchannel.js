@@ -8,6 +8,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 const schoolSelect = document.getElementById('school-select');
 const programSelect = document.getElementById('program-select');
 const termSelect = document.getElementById('term-select');
+const channelSelect = document.getElementById('channel-select');
 const form = document.getElementById('add-channel-form');
 
 // 🔹 Load existing schools
@@ -53,6 +54,20 @@ async function loadTerms(schoolName, programName) {
   });
 }
 
+async function loadChannels(schoolName, programName, termName) {
+  channelSelect.innerHTML = '<option value="">-- Select Existing Channel Name --</option>';
+  if (!schoolName || !programName || !termName) return;
+
+  const channelsRef = collection(db, 'schools', schoolName, 'programs', programName, 'terms', termName, 'channels');
+  const snapshot = await getDocs(channelsRef);
+  snapshot.forEach((doc) => {
+    const option = document.createElement('option');
+    option.value = doc.id;
+    option.textContent = doc.id;
+    channelSelect.appendChild(option);
+  });
+}
+
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = '/html/login/login.html';
@@ -75,6 +90,14 @@ onAuthStateChanged(auth, (user) => {
     await loadTerms(selectedSchool, selectedProgram);
   });
 
+  // When a term is chosen → load its channels
+  termSelect.addEventListener('change', async (e) => {
+    const selectedSchool = schoolSelect.value;
+    const selectedProgram = programSelect.value;
+    const selectedTerm = e.target.value;
+    await loadChannels(selectedSchool, selectedProgram, selectedTerm);
+  });
+
   // Handle form submit
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -82,8 +105,9 @@ onAuthStateChanged(auth, (user) => {
     const schoolName = document.getElementById('school-input').value.trim() || schoolSelect.value;
     const programName = document.getElementById('program-input').value.trim() || programSelect.value;
     const termName = document.getElementById('term-input').value.trim() || termSelect.value;
+    const channelName = document.getElementById('channel-input').value.trim() || channelSelect.value;
 
-    if (!schoolName || !programName || !termName) {
+    if (!schoolName || !programName || !termName || !channelName) {
       alert('Please select or enter all fields.');
       return;
     }
@@ -103,21 +127,53 @@ onAuthStateChanged(auth, (user) => {
         await setDoc(programRef, { name: programName, createdAt: serverTimestamp() });
       }
 
-      // 3️⃣ Add or verify term
+      // 3️⃣ Ensure term exists (create if missing)
       const termRef = doc(db, 'schools', schoolName, 'programs', programName, 'terms', termName);
       const termSnap = await getDoc(termRef);
-      if (termSnap.exists()) {
-        alert('This term already exists.');
+      if (!termSnap.exists()) {
+        await setDoc(termRef, {
+          name: termName,
+          createdBy: user.uid,
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      // 4️⃣ ✅ Create the actual channel
+      const channelRef = doc(db, 'schools', schoolName, 'programs', programName, 'terms', termName, 'channels', channelName);
+      const channelSnap = await getDoc(channelRef);
+
+      if (channelSnap.exists()) {
+        const data = channelSnap.data();
+        // If the channel exists and is not deleted, block creation
+        if (!data.isDeleted) {
+          alert('This channel already exists.');
+          return;
+        }
+
+        // If the channel was soft-deleted, "revive" it
+        await setDoc(
+          channelRef,
+          {
+            isDeleted: false,
+            deletedAt: null,
+            updatedAt: serverTimestamp(),
+          },
+          { merge: true }
+        );
+
+        alert(`Channel "${channelName}" restored successfully!`);
+        window.location.href = '../html/main.html';
         return;
       }
 
-      await setDoc(termRef, {
-        name: termName,
+      // Otherwise create a new channel
+      await setDoc(channelRef, {
+        name: channelName,
         createdBy: user.uid,
         createdAt: serverTimestamp(),
+        isDeleted: false,
       });
 
-      // ✅ Redirect after successful submit
       window.location.href = '../html/main.html';
 
     } catch (error) {
@@ -125,5 +181,4 @@ onAuthStateChanged(auth, (user) => {
       alert('Failed to add channel. Please try again.');
     }
   });
-}); // <- Close onAuthStateChanged
-
+});
