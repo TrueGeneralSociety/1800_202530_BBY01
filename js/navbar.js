@@ -1,7 +1,7 @@
 // navbar.js
 class SiteNavbar extends HTMLElement {
-    connectedCallback() {
-        this.innerHTML = `
+  connectedCallback() {
+    this.innerHTML = `
       <nav class="navbar navbar-expand-md custom-navbar">
         <div class="container-fluid">
           <a class="navbar-brand" href="../index.html">SynCalendar</a>
@@ -35,26 +35,28 @@ class SiteNavbar extends HTMLElement {
               <li class="nav-item">
                 <a class="nav-link" href="./deadline_list.html">Deadlines</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./registerCourses.html">Register Course</a>
+              </li>
             </ul>
           </div>
         </div>
       </nav>
     `;
 
-        // 🔍 Highlight the current active page
-        const currentPage = window.location.pathname.split("/").pop(); // e.g. 'profile.html'
-        const navLinks = this.querySelectorAll(".nav-link");
+    // 🔍 Highlight the current active page
+    const currentPage = window.location.pathname.split("/").pop(); // e.g. 'profile.html'
+    const navLinks = this.querySelectorAll(".nav-link");
 
-        navLinks.forEach((link) => {
-            const href = link.getAttribute("href");
-            if (href && href.includes(currentPage)) {
-                link.classList.add("active");
-            } else {
-                link.classList.remove("active");
-            }
-        });
-    }
+    navLinks.forEach((link) => {
+      const href = link.getAttribute("href");
+      if (href && href.includes(currentPage)) {
+        link.classList.add("active");
+      } else {
+        link.classList.remove("active");
+      }
+    });
+  }
 }
 
 customElements.define("site-navbar", SiteNavbar);
-
