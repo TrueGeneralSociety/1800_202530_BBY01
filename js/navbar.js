@@ -17,7 +17,9 @@ class SiteNavbar extends HTMLElement {
       this.innerHTML = `
         <nav class="navbar navbar-expand-md custom-navbar">
           <div class="container-fluid">
-            <a class="navbar-brand" href="${logoHref}">SynCalendar</a>
+            <a class="navbar-brand" href="${logoHref}">
+            <img src="/Logo/Logo.png" alt="SynCalendar Logo" height="40" class="me-2">
+            </a>
 
             <button
               class="navbar-toggler"
