@@ -191,3 +191,7 @@ footer {
   margin-top: auto;
   margin-bottom: auto;
 }
+form {
+  margin-top: 20px;
+  padding: 10px;
+}

@@ -17,4 +17,19 @@ submitBtn.addEventListener("click", async (event) => {
   event.preventDefault();
   const user = auth.currentUser;
   const title = document.getElementById("title").value;
+
+  if (user) {
+    const userDocRef = doc(collection(db, "deadlines"), user.uid);
+    await setDoc(
+      userDocRef,
+      {
+        title: title,
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+    alert("Deadline saved successfully!");
+  } else {
+    alert("No user is signed in.");
+  }
 });
