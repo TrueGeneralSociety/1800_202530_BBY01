@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>SynCalendar</title>
     <meta name="comp1800 template" content="My 1800 App" />
 
@@ -10,31 +9,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Other libraries go here -->
-    <link rel="icon" type="image/x-icon" href="/calendar.ico">
+    <link rel="icon" type="image/x-icon" href="/calendar.ico" />
     <script type="module" src="../js/navbar.js"></script>
     <script type="module" src="../js/footer.js"></script>
     <!-- Link to styles of your own -->
     <link rel="stylesheet" href="../styles/style.css" />
-</head>
+  </head>
 
-<body>
+  <body>
     <site-navbar></site-navbar>
 
     <main>
-        <div class="list-container">
-            <h2 class="list-heading">dealine list</h2>
-            <ul class="list-item">
-                <!-- Channel items will be dynamically added here -->
-            </ul>
-        </div>
+      <div class="list-container">
+        <h2 class="list-heading">Course deadlines</h2>
+        <ul class="list-item">
+          <!-- Channel items will be dynamically added here -->
+        </ul>
+      </div>
 
-        <div class="button-container">
-            <button id="add-deadline-btn" class="btn btn-success"> + Add
-                Deadline</button>
-        </div>
-        <button type="button" class="btn btn-secondary" onclick="history.back()">
-            ← Go Back
+      <div class="button-container">
+        <button id="add-deadline-btn" class="btn btn-success">
+          + Add Deadline
         </button>
+      </div>
+      <button type="button" class="btn btn-secondary" onclick="history.back()">
+        ← Go Back
+      </button>
     </main>
 
     <site-footer></site-footer>
@@ -49,6 +49,5 @@
 
     <!-- Link to scripts of your own -->
     <script type="module" src="../src/course.js"></script>
-</body>
-
+  </body>
 </html>
