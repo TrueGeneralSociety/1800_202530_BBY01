@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const liId = `${schoolName}-${programName}-${termName}-${chName}`;
 
                 // Handle added or modified channels
-                if ((change.type === 'added' || change.type === 'modified') && chData.createdBy === user.uid && !chData.isDeleted) {
+                if ((change.type === 'added' || change.type === 'modified') && !chData.isDeleted) {
                   if (!document.getElementById(liId)) {
                     const li = document.createElement('li');
                     li.className = 'list-box';
