@@ -15,6 +15,7 @@ footer {
 
 body {
   margin: 0;
+  padding: 0;
   padding-bottom: 80px;
   display: flex;
   flex-direction: column;
@@ -72,37 +73,45 @@ body {
 /* Allow main content to grow and push the footer down */
 main {
   flex: 1 0 auto;
-  margin-top: 60px;
+  margin-top: 80px;
   /* grow and take available space */
 }
 
-.hero-text h1 {
-  position: absolute;
-  font-size: 5vw;
-  padding: 10px;
+.hero-image {
+  background: url('/svgs/bg1.svg') no-repeat;
+  background-size: contain;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  overflow: hidden;
 }
 
-.hero-text button {
-  position: absolute;
-  background-color: #bedfff;
-  border: 3px solid #6db3ff;
-  border-radius: 10px;
-  top: 35vw;
-  left: 3vw;
-  width: 10vw;
-  height: 5vw;
-  font-size: 2vw;
+.hero-overlay {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.hero-buttons button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #5cbb92;
+}
+
+.hero-buttons button:hover {
+  background-color: #4aa67a;
 }
 
 main {
   position: relative;
   z-index: 1;
-}
-
-#signup {
-  font-size: 1.5rem;
-  padding: 0.8rem 2rem;
-  border-radius: 10px;
 }
 
 footer {
