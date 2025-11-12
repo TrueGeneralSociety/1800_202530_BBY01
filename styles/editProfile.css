@@ -1,0 +1,111 @@
+/* Basic Reset and Box Sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f7f6; /* Light gray background */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  min-height: 100vh; /* Full viewport height */
+}
+
+/* Container Styling */
+.container {
+  max-width: 600px; /* Max width for readability on larger screens */
+  width: 90%;
+  margin: 75px auto; /* Center container with top/bottom margin */
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styling */
+h1 {
+  color: #333;
+  font-size: 2em;
+  margin-bottom: 30px;
+  padding-top: 0 !important; /* Override inline style for clean spacing */
+  text-align: center;
+}
+
+/* Form Group Layout */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block; /* Make labels take up the full width */
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+/* Input/Form Control Styling */
+.form-control {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus {
+  border-color: #63aeff; /* Highlight border on focus */
+  outline: none;
+  box-shadow: 0 0 5px rgba(99, 174, 255, 0.5);
+}
+
+/* Styling for Disabled Fieldset/Inputs (Read-Only State) */
+fieldset:disabled .form-control {
+  background-color: #e9ecef; /* Light gray background for disabled state */
+  cursor: not-allowed;
+  color: #6c757d;
+}
+
+/* Button Group Layout */
+.profilebutton {
+  display: flex;
+  gap: 15px; /* Space between the buttons */
+  justify-content: flex-end; /* Align buttons to the right */
+  padding-top: 20px;
+}
+
+/* General Button Styling (Assuming btn class from Bootstrap) */
+.btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+  border: 1px solid transparent;
+}
+
+/* Specific Button Styles */
+#editButton {
+  background-color: #6c757d; /* btn-secondary color */
+  color: white;
+}
+
+#editButton:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+#saveButton {
+  background-color: #63aeff !important; /* Override inline style and use as primary color */
+  color: white;
+  border-color: #63aeff;
+}
+
+#saveButton:hover {
+  background-color: #3f90e9 !important;
+  border-color: #3f90e9;
+}
