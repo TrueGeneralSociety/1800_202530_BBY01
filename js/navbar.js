@@ -97,4 +97,3 @@ class SiteNavbar extends HTMLElement {
 }
 
 customElements.define("site-navbar", SiteNavbar);
-customElements.define("site-navbar", SiteNavbar);
