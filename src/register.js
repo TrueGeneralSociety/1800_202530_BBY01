@@ -28,3 +28,12 @@ signup.addEventListener("click", async (event) => {
   }
 });
 
+const logoLink = document.querySelector('.logo-link');
+
+if (logoLink) {
+  logoLink.addEventListener('click', (event) => {
+    event.preventDefault(); // prevent default <a> behavior
+    window.location.href = '/index.html'; // go to homepage
+  });
+}
+
