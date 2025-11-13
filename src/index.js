@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Check auth state
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      window.location.href = './html/app/main.html'; 
+      window.location.href = './html/main.html'; 
     }
 
   });
