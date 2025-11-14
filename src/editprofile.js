@@ -75,7 +75,6 @@ async function saveUserInfo(uid) {
         school,
         major,
         registeredcourses,
-        ...(profilePictureURL && { profilePicture: profilePictureURL }), // only if image uploaded
       },
       { merge: true }
     );
