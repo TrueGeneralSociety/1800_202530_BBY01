@@ -11,56 +11,33 @@ class SiteNavbar extends HTMLElement {
   renderNavbar() {
     onAuthStateChanged(auth, (user) => {
       const isLoggedIn = !!user;
-
-      // Set logo link based on auth state
       const logoHref = isLoggedIn ? "/html/main.html" : "/index.html";
 
       this.innerHTML = `
         <nav class="navbar navbar-expand-md custom-navbar">
           <div class="container-fluid">
-            <a class="navbar-brand" href="${logoHref}">SynCalendar</a>
+            <a class="navbar-brand" href="${logoHref}">
+              <img src="/Logo/Logo.png" alt="SynCalendar Logo" height="40" class="me-2">
+            </a>
 
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNav"
-              aria-controls="navbarNav"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                  <a class="nav-link" href="/html/profile.html">Profile</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">What we do</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/html/calendar.html">Calendar</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/html/deadline_list.html">Deadlines</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="/html/profile.html">Profile</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">What we do</a></li>
+                <li class="nav-item"><a class="nav-link" href="/html/calendar.html">Calendar</a></li>
+                <li class="nav-item"><a class="nav-link" href="/html/deadline_list.html">Deadlines</a></li>
               </ul>
 
               <ul class="navbar-nav ms-auto">
                 ${
                   isLoggedIn
-                    ? `
-                  <li class="nav-item">
-                    <a class="nav-link" href="#" id="logout-btn">Logout</a>
-                  </li>
-                `
-                    : `
-                  <li class="nav-item">
-                    <a class="nav-link" href="/html/login/login.html" id="login-btn">Login</a>
-                  </li>
-                `
+                    ? `<li class="nav-item"><a class="nav-link" href="#" id="logout-btn">Logout</a></li>`
+                    : `<li class="nav-item"><a class="nav-link" href="/html/login/login.html" id="login-btn">Login</a></li>`
                 }
               </ul>
             </div>
@@ -92,6 +69,19 @@ class SiteNavbar extends HTMLElement {
           link.classList.remove("active");
         }
       });
+      
+      // Disable links for unauthenticated users on index.html
+      if (!isLoggedIn && window.location.pathname.endsWith("index.html")) {
+        navLinks.forEach((link) => {
+          if (link.id === "login-btn") {
+            link.style.pointerEvents = "auto";
+            link.style.opacity = "1";
+          } else {
+            link.style.pointerEvents = "none";
+            link.style.opacity = "0.5";
+          }
+        });
+      }
     });
   }
 }
