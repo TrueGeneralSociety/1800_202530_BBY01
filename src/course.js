@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import { auth, db } from './firebase.js';
-import { collection, doc, onSnapshot, setDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, getDoc, doc, onSnapshot, setDoc, serverTimestamp } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,55 +13,58 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Read URL parameters to identify the course
-  const urlParams = new URLSearchParams(window.location.search);
-  const schoolName = urlParams.get('school');
-  const programName = urlParams.get('program');
-  const termName = urlParams.get('term');
-  const channelName = urlParams.get('channel');
-  const courseName = urlParams.get('course');
-
-  if (!schoolName || !programName || !termName || !channelName || !courseName) {
-    alert('Missing required course/channel information in URL');
-    return;
-  }
-
-  // Soft delete a deadline
-  async function deleteDeadline(deadlineId) {
-    if (!confirm(`Are you sure you want to delete this deadline?`)) return;
-
-    try {
-      const deadlineRef = doc(
-        db,
-        'schools', schoolName,
-        'programs', programName,
-        'terms', termName,
-        'channels', channelName,
-        'courses', courseName,
-        'deadlines', deadlineId
-      );
-      await setDoc(deadlineRef, { isDeleted: true, deletedAt: new Date().toISOString() }, { merge: true });
-    } catch (err) {
-      console.error('Error deleting deadline:', err);
-      alert('Failed to delete deadline.');
-    }
-  }
-
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.href = '/index.html';
       return;
     }
 
+    // Get course info from user document
+    const userRef = doc(db, 'users', user.uid);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data() || {};
+    const defaultCourse = userData.courses
+      ? Object.entries(userData.courses)[0]
+      : null;
+
+    if (!defaultCourse) {
+      alert('No course assigned to this channel.');
+      return;
+    }
+
+    const [courseName, courseInfo] = defaultCourse;
+    const { school, program, term, channel } = courseInfo;
+
     const deadlinesRef = collection(
       db,
-      'schools', schoolName,
-      'programs', programName,
-      'terms', termName,
-      'channels', channelName,
+      'schools', school,
+      'programs', program,
+      'terms', term,
+      'channels', channel,
       'courses', courseName,
       'deadlines'
     );
+
+    // Soft delete a deadline
+    async function deleteDeadline(deadlineId) {
+      if (!confirm(`Are you sure you want to delete this deadline?`)) return;
+
+      try {
+        const deadlineRef = doc(
+          db,
+          'schools', school,
+          'programs', program,
+          'terms', term,
+          'channels', channel,
+          'courses', courseName,
+          'deadlines', deadlineId
+        );
+        await setDoc(deadlineRef, { isDeleted: true, deletedAt: new Date().toISOString() }, { merge: true });
+      } catch (err) {
+        console.error('Error deleting deadline:', err);
+        alert('Failed to delete deadline.');
+      }
+    }
 
     // Real-time listener
     onSnapshot(deadlinesRef, (snapshot) => {

@@ -21,14 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const userRef = doc(db, 'users', user.uid);
       const userSnap = await getDoc(userRef);
       const userData = userSnap.data() || {};
-      const currentChannel = userData.currentChannel;
 
       const updates = { [`channels.${channelKey}`]: deleteField() };
-
-      // if the deleted channel is the currentChannel, clear it
-      if (currentChannel === channelKey) {
-        updates.currentChannel = null;
-      }
 
       await updateDoc(userRef, updates);
       li.remove();
@@ -63,13 +57,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const displayName = channelKey.split('-').slice(-1)[0];
         const nameSpan = document.createElement('span');
         nameSpan.textContent = displayName;
+        const parts = channelKey.split('-');
+        const schoolName = parts[0];
+        const programName = parts[1];
+        const termName = parts[2];
+        const channelName = parts.slice(3).join('-');
 
         li.appendChild(nameSpan);
 
         // click to open channel
         li.onclick = () => {
-          window.location.href = `/html/channel.html?channelKey=${encodeURIComponent(channelKey)}`;
+          const url = `/html/channel.html?school=${encodeURIComponent(schoolName)}&program=${encodeURIComponent(programName)}&term=${encodeURIComponent(termName)}&channel=${encodeURIComponent(channelName)}`;
+          window.location.href = url;
         };
+
 
         // delete button
         const deleteBtn = document.createElement('button');
@@ -108,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
       displayName: user.displayName || null,
       lastLogin: new Date().toISOString(),
       channels: userData.channels || {},
-      currentChannel: userData.currentChannel || null
     }, { merge: true });
 
     // UI update

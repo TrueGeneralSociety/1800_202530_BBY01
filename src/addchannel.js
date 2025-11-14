@@ -129,7 +129,6 @@ onAuthStateChanged(auth, async (user) => {
         // Add channel to user's channels
         await setDoc(userRef, {
           channels: { [channelKey]: true },
-          currentChannel: channelKey,
           lastActive: serverTimestamp()
         }, { merge: true });
         alert(`Channel "${channelName}" added for you!`);
