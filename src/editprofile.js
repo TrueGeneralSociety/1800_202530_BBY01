@@ -64,21 +64,23 @@ async function saveUserInfo(uid) {
   const major = document.getElementById("majorInput").value;
   const registeredcourses = document.getElementById("courseInput").value;
 
-  // Optional: simple validation
-  if (!name || !email) {
-    alert("Name and Email cannot be empty.");
-    return;
-  }
-
   try {
+    // Update Firestore
     const userRef = doc(db, "users", uid);
     await setDoc(
       userRef,
-      { name, email, school, major, registeredcourses },
-      { merge: true } // create if missing or update existing
+      {
+        name,
+        email,
+        school,
+        major,
+        registeredcourses,
+        ...(profilePictureURL && { profilePicture: profilePictureURL }), // only if image uploaded
+      },
+      { merge: true }
     );
+
     alert("Profile saved successfully!");
-    // Disable form again
     document.getElementById("personalInfo").disabled = true;
   } catch (error) {
     console.error("Error saving profile:", error);
