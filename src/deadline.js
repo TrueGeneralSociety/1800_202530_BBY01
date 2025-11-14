@@ -1,3 +1,5 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
 import { auth } from "/src/firebase.js";
 import { updateProfile, updateCurrentUser } from "firebase/auth";
 import {
