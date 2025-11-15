@@ -61,6 +61,8 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  align-items: center;
+  
 }
 
 .notification-list .notification-list_content .notification-list_img img {
@@ -80,4 +82,28 @@ body {
   width: 48px;
   border-radius: 5px;
   margin-left: 20px;
+}
+
+.status-bar {
+    width: 5px;      
+    height: 100%;      
+    border-radius: 2px; 
+    margin-right: 15px; 
+    flex-shrink: 0;
+}
+
+.status-bar.due-today {
+    background-color: #ff9900;
+}
+
+.status-bar.upcoming {
+    background-color: #007bff;
+}
+
+.status-bar.reallyupcoming {
+    background-color: #bbcc00;
+}
+
+.status-bar.overdue {
+    background-color: #ff4d4f;
 }

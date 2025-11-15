@@ -17,7 +17,7 @@ class SiteFooter extends HTMLElement {
       <img src="/svgs/bell-fill.svg" alt="Notifications" />
       <span class="badge text-bg-secondary">4</span>
     </button>
-    <button type="button" class="btn btn-primary btn-large position-relative">
+    <button type="button" onclick="location.href='../html/profile.html'"class="btn btn-primary btn-large position-relative">
       <img src="/svgs/person-circle.svg"  alt="profile" />
     </button>
   </footer>
