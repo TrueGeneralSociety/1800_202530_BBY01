@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
-import { auth, db } from './firebase.js'; // adjust path if needed
-import { collection, getDocs, doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from './firebase.js';
+import { collection, getDocs, getDoc, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
 // Form elements
@@ -11,7 +11,7 @@ const termSelect = document.getElementById('term-select');
 const channelSelect = document.getElementById('channel-select');
 const form = document.getElementById('add-channel-form');
 
-// 🔹 Load existing schools
+// Load existing schools
 async function loadSchools() {
   schoolSelect.innerHTML = '<option value="">-- Select Existing School --</option>';
   const snapshot = await getDocs(collection(db, 'schools'));
@@ -23,14 +23,13 @@ async function loadSchools() {
   });
 }
 
-// 🔹 Load programs for selected school
+//Load programs for selected school
 async function loadPrograms(schoolName) {
   programSelect.innerHTML = '<option value="">-- Select Existing Program --</option>';
   termSelect.innerHTML = '<option value="">-- Select Existing Term --</option>';
   if (!schoolName) return;
 
-  const programsRef = collection(db, 'schools', schoolName, 'programs');
-  const snapshot = await getDocs(programsRef);
+  const snapshot = await getDocs(collection(db, 'schools', schoolName, 'programs'));
   snapshot.forEach((doc) => {
     const option = document.createElement('option');
     option.value = doc.id;
@@ -39,13 +38,12 @@ async function loadPrograms(schoolName) {
   });
 }
 
-// 🔹 Load terms for selected program
+//Load terms for selected program
 async function loadTerms(schoolName, programName) {
   termSelect.innerHTML = '<option value="">-- Select Existing Term --</option>';
   if (!schoolName || !programName) return;
 
-  const termsRef = collection(db, 'schools', schoolName, 'programs', programName, 'terms');
-  const snapshot = await getDocs(termsRef);
+  const snapshot = await getDocs(collection(db, 'schools', schoolName, 'programs', programName, 'terms'));
   snapshot.forEach((doc) => {
     const option = document.createElement('option');
     option.value = doc.id;
@@ -54,12 +52,12 @@ async function loadTerms(schoolName, programName) {
   });
 }
 
+//Load channels for selected term
 async function loadChannels(schoolName, programName, termName) {
   channelSelect.innerHTML = '<option value="">-- Select Existing Channel Name --</option>';
   if (!schoolName || !programName || !termName) return;
 
-  const channelsRef = collection(db, 'schools', schoolName, 'programs', programName, 'terms', termName, 'channels');
-  const snapshot = await getDocs(channelsRef);
+  const snapshot = await getDocs(collection(db, 'schools', schoolName, 'programs', programName, 'terms', termName, 'channels'));
   snapshot.forEach((doc) => {
     const option = document.createElement('option');
     option.value = doc.id;
@@ -68,37 +66,21 @@ async function loadChannels(schoolName, programName, termName) {
   });
 }
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = '/html/login/login.html';
     return;
   }
 
-  // Load schools on page load
+  const userRef = doc(db, 'users', user.uid);
+
   loadSchools();
 
-  // When a school is chosen → load its programs
-  schoolSelect.addEventListener('change', async (e) => {
-    const selectedSchool = e.target.value;
-    await loadPrograms(selectedSchool);
-  });
+  schoolSelect.addEventListener('change', (e) => loadPrograms(e.target.value));
+  programSelect.addEventListener('change', (e) => loadTerms(schoolSelect.value, e.target.value));
+  termSelect.addEventListener('change', (e) => loadChannels(schoolSelect.value, programSelect.value, e.target.value));
 
-  // When a program is chosen → load its terms
-  programSelect.addEventListener('change', async (e) => {
-    const selectedSchool = schoolSelect.value;
-    const selectedProgram = e.target.value;
-    await loadTerms(selectedSchool, selectedProgram);
-  });
-
-  // When a term is chosen → load its channels
-  termSelect.addEventListener('change', async (e) => {
-    const selectedSchool = schoolSelect.value;
-    const selectedProgram = programSelect.value;
-    const selectedTerm = e.target.value;
-    await loadChannels(selectedSchool, selectedProgram, selectedTerm);
-  });
-
-  // Handle form submit
+  // Form submit
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -113,72 +95,51 @@ onAuthStateChanged(auth, (user) => {
     }
 
     try {
-      // 1️⃣ Ensure school exists
+      // Ensure school exists
       const schoolRef = doc(db, 'schools', schoolName);
-      const schoolSnap = await getDoc(schoolRef);
-      if (!schoolSnap.exists()) {
+      if (!(await getDoc(schoolRef)).exists()) {
         await setDoc(schoolRef, { name: schoolName, createdAt: serverTimestamp() });
       }
 
-      // 2️⃣ Ensure program exists
+      // Ensure program exists
       const programRef = doc(db, 'schools', schoolName, 'programs', programName);
-      const programSnap = await getDoc(programRef);
-      if (!programSnap.exists()) {
+      if (!(await getDoc(programRef)).exists()) {
         await setDoc(programRef, { name: programName, createdAt: serverTimestamp() });
       }
 
-      // 3️⃣ Ensure term exists (create if missing)
+      // Ensure term exists
       const termRef = doc(db, 'schools', schoolName, 'programs', programName, 'terms', termName);
-      const termSnap = await getDoc(termRef);
-      if (!termSnap.exists()) {
-        await setDoc(termRef, {
-          name: termName,
-          createdBy: user.uid,
-          createdAt: serverTimestamp(),
-        });
+      if (!(await getDoc(termRef)).exists()) {
+        await setDoc(termRef, { name: termName, createdBy: user.uid, createdAt: serverTimestamp() });
       }
 
-      // 4️⃣ ✅ Create the actual channel
+      // Ensure channel exists in public collection
       const channelRef = doc(db, 'schools', schoolName, 'programs', programName, 'terms', termName, 'channels', channelName);
-      const channelSnap = await getDoc(channelRef);
-
-      if (channelSnap.exists()) {
-        const data = channelSnap.data();
-        // If the channel exists and is not deleted, block creation
-        if (!data.isDeleted) {
-          alert('This channel already exists.');
-          return;
-        }
-
-        // If the channel was soft-deleted, "revive" it
-        await setDoc(
-          channelRef,
-          {
-            isDeleted: false,
-            deletedAt: null,
-            updatedAt: serverTimestamp(),
-          },
-          { merge: true }
-        );
-
-        alert(`Channel "${channelName}" restored successfully!`);
-        window.location.href = '../html/main.html';
-        return;
+      if (!(await getDoc(channelRef)).exists()) {
+        await setDoc(channelRef, { name: channelName, createdBy: user.uid, createdAt: serverTimestamp(), isDeleted: false });
       }
 
-      // Otherwise create a new channel
-      await setDoc(channelRef, {
-        name: channelName,
-        createdBy: user.uid,
-        createdAt: serverTimestamp(),
-        isDeleted: false,
-      });
+      // Add/restore channel for user
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data() || {};
+      const userChannels = userData.channels || {};
+      const channelKey = `${schoolName}-${programName}-${termName}-${channelName}`;
+
+      if (!userChannels[channelKey]) {
+        // Add channel to user's channels
+        await setDoc(userRef, {
+          channels: { [channelKey]: true },
+          lastActive: serverTimestamp()
+        }, { merge: true });
+        alert(`Channel "${channelName}" added for you!`);
+      } else {
+        alert(`Channel "${channelName}" already exists for you.`);
+      }
 
       window.location.href = '../html/main.html';
-
-    } catch (error) {
-      console.error('Error adding channel:', error);
-      alert('Failed to add channel. Please try again.');
+    } catch (err) {
+      console.error('Error adding channel:', err);
+      alert('Failed to add channel. Check console.');
     }
   });
 });

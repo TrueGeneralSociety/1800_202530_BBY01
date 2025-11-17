@@ -1,142 +1,89 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap';
-import { auth, db } from './firebase.js';
-import { collection, doc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("add-deadline-form");
 
-// Wait until DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('form');
-    const taskNameInput = document.getElementById('taskName');
-    const deadlineInput = document.getElementById('deadlineDateTime');
-    const notesInput = document.getElementById('additionalNotes');
+    const params = new URLSearchParams(window.location.search);
+    const school = params.get("school");
+    const program = params.get("program");
+    const term = params.get("term");
+    const channel = params.get("channel");
+    const courseName = params.get("course");
 
-    // Create a container to show deadlines
-    let deadlinesList = document.getElementById('deadlinesList');
-    if (!deadlinesList) {
-        deadlinesList = document.createElement('ul');
-        deadlinesList.id = 'deadlinesList';
-        deadlinesList.className = 'list-group mt-3';
-        form.parentElement.appendChild(deadlinesList);
-    }
-
-    // Read URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const schoolName = urlParams.get('school');
-    const programName = urlParams.get('program');
-    const termName = urlParams.get('term');
-    const channelName = urlParams.get('channel');
-    const courseName = urlParams.get('course');
-
-    if (!schoolName || !programName || !termName || !channelName || !courseName) {
-        alert('Missing required course/channel information in URL');
+    if (!school || !program || !term || !channel || !courseName) {
+        alert("Missing course/channel info in URL");
         return;
     }
 
-    onAuthStateChanged(auth, (user) => {
+    // 페이지 로딩 시 단 한 번만 auth 체크
+    onAuthStateChanged(auth, async (user) => {
         if (!user) {
-            window.location.href = '/index.html';
+            // user 없으면 index 이동
+            window.location.href = "/index.html";
             return;
         }
 
-        const deadlinesRef = collection(
-            db,
-            'schools',
-            schoolName,
-            'programs',
-            programName,
-            'terms',
-            termName,
-            'channels',
-            channelName,
-            'courses',
-            courseName,
-            'deadlines'
-        );
+        // submit 이벤트 정의
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault(); // 페이지 리로드 방지
 
-        // Real-time listener for deadlines
-        onSnapshot(deadlinesRef, (snapshot) => {
-            deadlinesList.innerHTML = '';
-            if (snapshot.empty) {
-                deadlinesList.innerHTML = '<li class="list-group-item">No deadlines yet.</li>';
-            } else {
-                snapshot.docs.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    if (data.isDeleted) return;
-
-                    const li = document.createElement('li');
-                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
-
-                    const text = document.createElement('span');
-                    text.textContent = `${data.taskName} - ${new Date(data.deadlineDateTime).toLocaleString()}`;
-                    li.appendChild(text);
-
-                    if (data.notes) {
-                        const note = document.createElement('small');
-                        note.textContent = ` (${data.notes})`;
-                        note.className = 'text-muted ms-1';
-                        li.appendChild(note);
-                    }
-
-                    // Delete button
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.textContent = '🗑️';
-                    deleteBtn.className = 'btn btn-sm btn-danger ms-2';
-                    deleteBtn.onclick = async () => {
-                        try {
-                            await setDoc(doc(deadlinesRef, docSnap.id), { isDeleted: true, deletedAt: new Date().toISOString() }, { merge: true });
-                        } catch (err) {
-                            console.error('Error deleting deadline:', err);
-                            alert('Failed to delete deadline.');
-                        }
-                    };
-
-                    li.appendChild(deleteBtn);
-                    deadlinesList.appendChild(li);
-                });
-            }
-        });
-
-        // Handle form submission
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const taskName = taskNameInput.value.trim();
-            const deadlineDateTime = deadlineInput.value;
-            const notes = notesInput.value.trim();
+            const taskName = document.getElementById("taskName").value.trim();
+            const deadlineDateTime = document.getElementById("deadlineDateTime").value;
+            const notes = document.getElementById("notes").value.trim();
 
             if (!taskName || !deadlineDateTime) {
-                alert('Please enter a task name and date/time.');
+                alert("Task name and deadline are required");
                 return;
             }
 
-            try {
-                // Generate a unique ID for each deadline
-                const uniqueId = `${taskName}-${Date.now()}`;
+            const timestamp = Date.now();
+            const deadlineId = `${taskName}-${timestamp}`;
 
-                await setDoc(doc(deadlinesRef, uniqueId), {
+            const deadlineRef = doc(
+                db,
+                "schools", school,
+                "programs", program,
+                "terms", term,
+                "channels", channel,
+                "courses", courseName,
+                "deadlines", deadlineId
+            );
+
+            try {
+                await setDoc(deadlineRef, {
                     taskName,
                     deadlineDateTime,
                     notes,
-                    createdBy: user.uid,
                     createdAt: serverTimestamp(),
-                    isDeleted: false
+                    createdBy: user.uid
                 });
 
-                alert(`Deadline "${taskName}" added successfully!`);
+                const userRef = doc(db, "users", user.uid);
+                const userSnap = await getDoc(userRef);
+                const userData = userSnap.data() || {};
+                const userCourseData = userData.courses?.[courseName] || {};
 
-                const params = new URLSearchParams({
-                    school: schoolName,
-                    program: programName,
-                    term: termName,
-                    channel: channelName,
-                    course: courseName
-                });
-                window.location.href = `/html/course.html?${params.toString()}`;
+                await setDoc(
+                    userRef,
+                    {
+                        courses: {
+                            [courseName]: {
+                                ...userCourseData,
+                                deadlines: {
+                                    ...userCourseData.deadlines,
+                                    [deadlineId]: true
+                                }
+                            }
+                        }
+                    },
+                    { merge: true }
+                );
+
+                alert("Deadline added successfully!");
+                // 절대 경로 사용
+                window.location.href = `/html/deadlineList.html?school=${encodeURIComponent(school)}&program=${encodeURIComponent(program)}&term=${encodeURIComponent(term)}&channel=${encodeURIComponent(channel)}&course=${encodeURIComponent(courseName)}`;
 
             } catch (err) {
-                console.error('Error adding deadline:', err);
-                alert('Failed to add deadline. Check console for details.');
+                console.error(err);
+                alert("Failed to add deadline");
             }
         });
     });
