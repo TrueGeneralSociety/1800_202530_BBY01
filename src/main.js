@@ -13,25 +13,40 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // delete user channel
-  async function deleteUserChannel(user, channelKey, li) {
-    if (!confirm(`Are you sure you want to delete this channel for yourself?`)) return;
+async function deleteUserChannel(user, channelKey, li) {
+  if (!confirm(`Are you sure you want to delete this channel for yourself? This will also delete all courses in this channel.`)) return;
 
-    try {
-      const userRef = doc(db, 'users', user.uid);
-      const userSnap = await getDoc(userRef);
-      const userData = userSnap.data() || {};
+  try {
+    const userRef = doc(db, 'users', user.uid);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data() || {};
 
-      const updates = { [`channels.${channelKey}`]: deleteField() };
+    // Delete the channel itself
+    await updateDoc(userRef, {
+      [`channels.${channelKey}`]: deleteField()
+    });
 
-      await updateDoc(userRef, updates);
-      li.remove();
-
-    } catch (err) {
-      console.error('Failed to delete channel:', err);
-      alert('Failed to delete channel. Check console.');
+    // Delete all courses under this channel
+    const courses = userData.courses || {};
+    for (const [courseKey, courseData] of Object.entries(courses)) {
+      const courseChannel = courseData.channel || '';
+      const keyMatches = courseData.channelKey === channelKey || courseChannel === channelKey.split('-').slice(3).join('-');
+      if (keyMatches) {
+        await updateDoc(userRef, {
+          [`courses.${courseKey}`]: deleteField()
+        });
+      }
     }
+
+    // Remove from UI
+    li.remove();
+    alert('Channel and all associated courses have been deleted successfully.');
+
+  } catch (err) {
+    console.error('Failed to delete channel and courses:', err);
+    alert('Failed to delete channel. Check console for details.');
   }
+}
 
   // user channel load
   async function loadChannels(user) {
