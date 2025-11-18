@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import { auth, db } from './firebase.js';
-import { collection, doc, onSnapshot, setDoc, getDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, setDoc, getDoc, deleteField } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+  const channelKey = `${schoolName}-${programName}-${termName}-${channelName}`;
+
   // Soft delete a course
   async function deleteCourse(courseName) {
     if (!confirm(`Are you sure you want to delete "${courseName}"? It will be hidden but data is kept.`)) return;
@@ -45,6 +47,24 @@ document.addEventListener('DOMContentLoaded', () => {
       );
 
       await setDoc(courseRef, { isDeleted: true, deletedAt: new Date().toISOString() }, { merge: true });
+
+      // Also remove from user's courses map
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userRef);
+        const userData = userSnap.data() || {};
+        const updatedCourses = { ...(userData.courses || {}) };
+
+        for (const [courseKey, courseData] of Object.entries(updatedCourses)) {
+          if (courseData.channelKey === channelKey && courseKey === courseName) {
+            updatedCourses[courseKey] = { ...updatedCourses[courseKey], isDeleted: true };
+          }
+        }
+
+        await setDoc(userRef, { courses: updatedCourses }, { merge: true });
+      }
+
       alert(`"${courseName}" hidden successfully.`);
     } catch (err) {
       console.error('Error deleting course:', err);
@@ -52,76 +72,95 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Load courses in this channel
+  // Load courses and sync to user profile
   async function loadCourses(user) {
     listContainer.innerHTML = '';
+    const coursesRef = collection(
+      db,
+      'schools',
+      schoolName,
+      'programs',
+      programName,
+      'terms',
+      termName,
+      'channels',
+      channelName,
+      'courses'
+    );
 
-    try {
-      const coursesRef = collection(
-        db,
-        'schools',
-        schoolName,
-        'programs',
-        programName,
-        'terms',
-        termName,
-        'channels',
-        channelName,
-        'courses'
-      );
+    const userRef = doc(db, 'users', user.uid);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data() || {};
+    const updatedCourses = { ...(userData.courses || {}) };
+    const updatedChannels = { ...(userData.channels || {}), [channelKey]: true };
+    let needsUpdate = false;
 
-      // Real-time listener
-      onSnapshot(coursesRef, (snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          const courseName = change.doc.id;
-          const courseData = change.doc.data();
-          const liId = `course-${courseName}`;
+    onSnapshot(coursesRef, async (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        const courseName = change.doc.id;
+        const courseData = change.doc.data();
+        const liId = `course-${courseName}`;
 
-          // Added or modified
-          if ((change.type === 'added' || change.type === 'modified') && !courseData.isDeleted) {
-            if (!document.getElementById(liId)) {
-              const li = document.createElement('li');
-              li.className = 'list-box';
-              li.id = liId;
-              li.style.cursor = 'default'; // courses may not navigate
+        // Sync course into user profile
+        if (!courseData.isDeleted && !updatedCourses[courseName]) {
+          updatedCourses[courseName] = {
+            school: schoolName,
+            program: programName,
+            term: termName,
+            channel: channelName,
+            channelKey,
+            addedAt: courseData.createdAt || new Date().toISOString()
+          };
+          needsUpdate = true;
+        }
 
-              li.onclick = () => {
-                      window.location.href = `/html/course.html?school=${encodeURIComponent(schoolName)}&program=${encodeURIComponent(programName)}&term=${encodeURIComponent(termName)}&channel=${encodeURIComponent(channelName)}&course=${encodeURIComponent(courseName)}`;
-                    };
+        // UI: add or update course
+        if ((change.type === 'added' || change.type === 'modified') && !courseData.isDeleted) {
+          if (!document.getElementById(liId)) {
+            const li = document.createElement('li');
+            li.className = 'list-box';
+            li.id = liId;
+            li.style.cursor = 'default';
 
-              const nameSpan = document.createElement('span');
-              nameSpan.textContent = courseName;
+            li.onclick = () => {
+              window.location.href = `/html/course.html?school=${encodeURIComponent(schoolName)}&program=${encodeURIComponent(programName)}&term=${encodeURIComponent(termName)}&channel=${encodeURIComponent(channelName)}&course=${encodeURIComponent(courseName)}`;
+            };
 
-              const deleteBtn = document.createElement('button');
-              deleteBtn.textContent = '🗑️';
-              deleteBtn.className = 'btn btn-sm btn-danger ms-2';
-              deleteBtn.onclick = async (e) => {
-                e.stopPropagation();
-                await deleteCourse(courseName);
-                li.remove();
-              };
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = courseName;
 
-              li.appendChild(nameSpan);
-              li.appendChild(deleteBtn);
-              listContainer.appendChild(li);
-            }
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '🗑️';
+            deleteBtn.className = 'btn btn-sm btn-danger ms-2';
+            deleteBtn.onclick = async (e) => {
+              e.stopPropagation();
+              await deleteCourse(courseName);
+              li.remove();
+            };
+
+            li.appendChild(nameSpan);
+            li.appendChild(deleteBtn);
+            listContainer.appendChild(li);
           }
+        }
 
-          // Remove deleted courses
-          if (courseData.isDeleted && document.getElementById(liId)) {
-            document.getElementById(liId).remove();
-          }
-        });
-
-        // Placeholder if no courses
-        if (listContainer.children.length === 0) {
-          listContainer.innerHTML = '<li>No courses found in this channel. Add a new one!</li>';
+        // Remove deleted courses from UI
+        if (courseData.isDeleted && document.getElementById(liId)) {
+          document.getElementById(liId).remove();
         }
       });
-    } catch (err) {
-      console.error('Error loading courses:', err);
-      listContainer.innerHTML = '<li>Failed to load courses.</li>';
-    }
+
+      // Update user profile if new courses added
+      if (needsUpdate) {
+        await setDoc(userRef, { courses: updatedCourses, channels: updatedChannels }, { merge: true });
+        needsUpdate = false;
+      }
+
+      // Placeholder if no courses
+      if (listContainer.children.length === 0) {
+        listContainer.innerHTML = '<li>No courses found in this channel. Add a new one!</li>';
+      }
+    });
   }
 
   // Auth listener
@@ -134,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadCourses(user);
   });
 
-  // Optional: redirect Add Course button to addcourse.html with same URL params
+  // Add course button
   if (addCourseBtn) {
     addCourseBtn.onclick = () => {
       window.location.href = `/html/addcourse.html?school=${encodeURIComponent(schoolName)}&program=${encodeURIComponent(programName)}&term=${encodeURIComponent(termName)}&channel=${encodeURIComponent(channelName)}`;

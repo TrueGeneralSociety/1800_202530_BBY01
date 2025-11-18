@@ -3,6 +3,7 @@ import 'bootstrap';
 import { auth, db } from './firebase.js';
 import { doc, getDoc, setDoc, collection, getDocs, serverTimestamp } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+import { channel } from 'diagnostics_channel';
 
 // Elements
 const form = document.getElementById('add-course-form');
@@ -45,16 +46,53 @@ onAuthStateChanged(auth, async (user) => {
     );
 
     const snapshot = await getDocs(coursesRef);
+    const userRef = doc(db, 'users', user.uid);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data() || {};
+    const updatedCourses = { ...(userData.courses || {}) };
+    const channelKey = `${schoolName}-${programName}-${termName}-${channelName}`;
+    const updatedChannels = { ...(userData.channels || {}), [channelKey]: true };
+
+    let needsUpdate = false;
+
     snapshot.forEach((docSnap) => {
       const data = docSnap.data();
       if (!data.isDeleted) {
+        // Populate select dropdown
         const option = document.createElement('option');
         option.value = docSnap.id;
         option.textContent = docSnap.id;
         courseSelect.appendChild(option);
+
+        // Update user.courses if missing
+        if (!updatedCourses[docSnap.id]) {
+          updatedCourses[docSnap.id] = {
+            school: schoolName,
+            program: programName,
+            term: termName,
+            channel: channelName,
+            channelKey,
+            addedAt: data.createdAt || serverTimestamp()
+          };
+          needsUpdate = true;
+        }
       }
     });
+
+    // Update user document if needed
+    if (needsUpdate) {
+      await setDoc(
+        userRef,
+        {
+          courses: updatedCourses,
+          channels: updatedChannels,
+          lastActive: serverTimestamp()
+        },
+        { merge: true }
+      );
+    }
   }
+
 
   await loadCourses();
 
@@ -98,6 +136,7 @@ onAuthStateChanged(auth, async (user) => {
         program: programName,
         term: termName,
         channel: channelName,
+        channelKey,
         addedAt: serverTimestamp()
       };
 
@@ -129,7 +168,7 @@ onAuthStateChanged(auth, async (user) => {
         });
       }
 
-      // 유저 문서 업데이트
+      // user doc update
       await setDoc(
         userRef,
         {
