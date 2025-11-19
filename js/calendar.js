@@ -19,6 +19,11 @@ const monthNames = [
 let currentDate = new Date();
 let currentMonthIndex = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
+let currentDay = currentDate.getDate();
+let originalMonthIndex = currentMonthIndex;
+let originalYear = currentYear;
+
+// DOM elements
 const monthLabel = document.getElementById("month_container");
 //const yearLabel = document.getElementById("year_container");
 const daysContainer = document.querySelector(".days");
@@ -38,6 +43,19 @@ async function renderMonth(year, monthIndex) {
   const htmlContent = await response.text();
   // Insert the fetched HTML into the days container
   daysContainer.innerHTML = htmlContent;
+
+  const dayItems = document.querySelectorAll(".days li");
+
+  // Find the correct <li> and apply .today
+  dayItems.forEach((li) => {
+    if (
+      li.textContent.trim() === String(currentDay) &&
+      year === originalYear &&
+      monthIndex === originalMonthIndex
+    ) {
+      li.classList.add("today");
+    }
+  });
 }
 
 function goPrev() {

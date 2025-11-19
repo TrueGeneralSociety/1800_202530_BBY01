@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>SynCalendar</title>
     <meta name="comp1800 template" content="My 1800 App" />
 
@@ -15,30 +14,40 @@
     <script type="module" src="../js/footer.js"></script>
     <!-- Link to styles of your own -->
     <link rel="stylesheet" href="../styles/style.css" />
-</head>
+  </head>
 
-<body>
+  <body>
     <site-navbar></site-navbar>
 
     <main>
-        <div class="form-container">
-            <h2>Add Course</h2>
-            <form id="add-course-form">
-                <label for="course-name">Course Name:</label><br />
-                <select id="course-select" name="course">
-                    <option value="">-- Select Existing Course --</option>
-                </select>
-                <br />
-                <label for="course-input">Or enter new course:</label><br />
-                <input type="text" id="course-input" name="course-input" placeholder="Enter new course" />
-                <br /><br />
-                <input type="submit" value="Add Course" />
-            </form>
-        </div>
+      <div class="form-container">
+        <h2>Add Course</h2>
+        <form id="add-course-form">
+          <label for="course-name">Course Name:</label><br />
+          <select id="course-select" name="course">
+            <option value="">-- Select Existing Course --</option>
+          </select>
+          <br />
+          <label for="course-input">Or enter new course:</label><br />
+          <input
+            type="text"
+            id="course-input"
+            name="course-input"
+            placeholder="Enter new course"
+          />
+          <br /><br />
+          <input type="submit" value="Add Course" />
+        </form>
+      </div>
 
-        <button type="button" class="btn btn-secondary" onclick="history.back()">
-            ← Go Back
-        </button>
+      <button type="button" class="btn btn-secondary" onclick="history.back()">
+        ← Go Back
+      </button>
+
+      <div class="message" style="margin-top: 15px">
+        Want to add yourself into an existing course?
+        <a href="registerCourses.html"> Register here. </a>
+      </div>
     </main>
 
     <site-footer></site-footer>
@@ -53,6 +62,5 @@
 
     <!-- Link to scripts of your own -->
     <script type="module" src="/src/addcourse.js"></script>
-</body>
-
+  </body>
 </html>
