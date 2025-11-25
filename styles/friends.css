@@ -1,0 +1,40 @@
+#contacts {
+  padding-top: 10px;
+  padding-left: 5%;
+}
+h2 {
+  padding-top: 15%;
+  padding-left: 20px;
+}
+
+#friend1 {
+  border: 1px solid black;
+  padding: 10px;
+  padding-left: 25px;
+  border-radius: 28px;
+}
+
+#friend2 {
+  border: 1px solid black;
+  padding: 9px;
+  padding-left: 25px;
+  border-radius: 28px;
+}
+#friend3 {
+  border: 1px solid black;
+  padding: 9px;
+  padding-left: 25px;
+  border-radius: 28px;
+}
+#friend4 {
+  border: 1px solid black;
+  padding: 9px;
+  padding-left: 25px;
+  border-radius: 28px;
+}
+#friend5 {
+  border: 1px solid black;
+  padding: 9px;
+  padding-left: 25px;
+  border-radius: 28px;
+}
