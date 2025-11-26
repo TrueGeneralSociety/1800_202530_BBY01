@@ -1,90 +1,135 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("add-deadline-form");
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
+import { auth, db } from './firebase.js';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 
-    const params = new URLSearchParams(window.location.search);
-    const school = params.get("school");
-    const program = params.get("program");
-    const term = params.get("term");
-    const channel = params.get("channel");
-    const courseName = params.get("course");
+// ----------------------
+// DOM Elements
+// ----------------------
+const form = document.getElementById('add-deadline-form');
+const taskNameInput = document.getElementById('taskName');
+const deadlineDateInput = document.getElementById('deadlineDateTime');
+const notesInput = document.getElementById('notes');
+const backBtn = document.getElementById('backButton');
 
-    if (!school || !program || !term || !channel || !courseName) {
-        alert("Missing course/channel info in URL");
-        return;
+// ----------------------
+// URL Params
+// ----------------------
+const params = new URLSearchParams(window.location.search);
+const schoolName = params.get('school');
+const programName = params.get('program');
+const termName = params.get('term');
+const channelName = params.get('channel');
+const courseName = params.get('course');
+
+if (!schoolName || !programName || !termName || !channelName || !courseName) {
+  alert('Missing course/channel info in URL.');
+  throw new Error('Missing URL params');
+}
+
+// ----------------------
+// Build absolute URL for Go Back button
+// ----------------------
+if (backBtn) {
+  const backQuery = new URLSearchParams({
+    school: schoolName,
+    program: programName,
+    term: termName,
+    channel: channelName,
+    course: courseName
+  }).toString();
+  backBtn.href = `${window.location.origin}/html/course.html?${backQuery}`;
+}
+
+// ----------------------
+// Auth Check
+// ----------------------
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = `${window.location.origin}/index.html`;
+    return;
+  }
+
+  const userRef = doc(db, 'users', user.uid);
+
+  // ----------------------
+  // Form Submit Handler
+  // ----------------------
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault(); // prevent default form submission
+
+    const taskName = taskNameInput.value.trim();
+    const deadlineDateTime = deadlineDateInput.value;
+    const notes = notesInput.value.trim();
+
+    if (!taskName || !deadlineDateTime) {
+      alert('Task name and deadline are required.');
+      return;
     }
 
-    // 페이지 로딩 시 단 한 번만 auth 체크
-    onAuthStateChanged(auth, async (user) => {
-        if (!user) {
-            // user 없으면 index 이동
-            window.location.href = "/index.html";
-            return;
-        }
+    const timestamp = Date.now();
+    const deadlineId = `${taskName}-${timestamp}`;
 
-        // submit 이벤트 정의
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault(); // 페이지 리로드 방지
+    const deadlineRef = doc(
+      db,
+      'schools', schoolName,
+      'programs', programName,
+      'terms', termName,
+      'channels', channelName,
+      'courses', courseName,
+      'deadlines', deadlineId
+    );
 
-            const taskName = document.getElementById("taskName").value.trim();
-            const deadlineDateTime = document.getElementById("deadlineDateTime").value;
-            const notes = document.getElementById("notes").value.trim();
+    try {
+      // Add deadline to Firestore
+      await setDoc(deadlineRef, {
+        taskName,
+        deadlineDateTime,
+        notes,
+        createdAt: serverTimestamp(),
+        createdBy: user.uid
+      });
 
-            if (!taskName || !deadlineDateTime) {
-                alert("Task name and deadline are required");
-                return;
+      // Update user's course deadlines map
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data() || {};
+      const userCourseData = userData.courses?.[courseName] || {};
+
+      await setDoc(
+        userRef,
+        {
+          courses: {
+            [courseName]: {
+              ...userCourseData,
+              deadlines: {
+                ...userCourseData.deadlines,
+                [deadlineId]: true
+              }
             }
+          }
+        },
+        { merge: true }
+      );
 
-            const timestamp = Date.now();
-            const deadlineId = `${taskName}-${timestamp}`;
+      alert('Deadline added successfully!');
 
-            const deadlineRef = doc(
-                db,
-                "schools", school,
-                "programs", program,
-                "terms", term,
-                "channels", channel,
-                "courses", courseName,
-                "deadlines", deadlineId
-            );
+      // ----------------------
+      // Redirect to deadline list (absolute path)
+      // ----------------------
+      const queryParams = new URLSearchParams({
+        school: schoolName,
+        program: programName,
+        term: termName,
+        channel: channelName,
+        course: courseName
+      }).toString();
 
-            try {
-                await setDoc(deadlineRef, {
-                    taskName,
-                    deadlineDateTime,
-                    notes,
-                    createdAt: serverTimestamp(),
-                    createdBy: user.uid
-                });
+      window.location.href = `${window.location.origin}/html/course.html?${queryParams}`;
 
-                const userRef = doc(db, "users", user.uid);
-                const userSnap = await getDoc(userRef);
-                const userData = userSnap.data() || {};
-                const userCourseData = userData.courses?.[courseName] || {};
-
-                await setDoc(
-                    userRef,
-                    {
-                        courses: {
-                            [courseName]: {
-                                ...userCourseData,
-                                deadlines: {
-                                    ...userCourseData.deadlines,
-                                    [deadlineId]: true
-                                }
-                            }
-                        }
-                    },
-                    { merge: true }
-                );
-
-                alert("Deadline added successfully!");
-                // 절대 경로 사용
-                window.location.href = `/html/deadlineList.html?school=${encodeURIComponent(school)}&program=${encodeURIComponent(program)}&term=${encodeURIComponent(term)}&channel=${encodeURIComponent(channel)}&course=${encodeURIComponent(courseName)}`;
-
-            } catch (err) {
-                console.error(err);
-                alert("Failed to add deadline");
-            }
-        });
-    });
+    } catch (err) {
+      console.error('Failed to add deadline:', err);
+      alert('Failed to add deadline.');
+    }
+  });
 });
