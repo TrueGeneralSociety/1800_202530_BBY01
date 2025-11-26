@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import { auth, db } from './firebase.js';
-import { getDoc, doc, collection, getDocs } from 'firebase/firestore';
+import { getDoc, doc, collection, getDocs, setDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
 async function loadNotifications(user) {
@@ -12,7 +12,6 @@ async function loadNotifications(user) {
     const userSnap = await getDoc(userRef);
     const courses = userSnap.data()?.courses || {};
 
-    // Loop through all courses the user is enrolled in
     for (const [courseName, courseData] of Object.entries(courses)) {
         const deadlinesRef = collection(
             db,
@@ -21,14 +20,42 @@ async function loadNotifications(user) {
 
         const deadlinesSnapshot = await getDocs(deadlinesRef);
 
+        const activeDeadlines = {};
+        const userDeadlines = courseData.deadlines || {};
+
+        // Render deadlines and collect active ones
         deadlinesSnapshot.forEach(deadlineDoc => {
             const d = deadlineDoc.data();
+            const dId = deadlineDoc.id;
+
+            if (d.isDeleted) return; // skip deleted deadlines
+
+            activeDeadlines[dId] = true;
+
             const relative = calculateRelativeTime(d.deadlineDateTime);
             const dueDate = new Date(d.deadlineDateTime);
-
             const cardHTML = createDeadlineCard(courseName, d.taskName, relative, formatDate(dueDate));
             container.insertAdjacentHTML("beforeend", cardHTML);
         });
+
+        // Remove ghost deadlines from user DB
+        const ghostDeadlines = Object.keys(userDeadlines).filter(dId => !activeDeadlines[dId]);
+        if (ghostDeadlines.length > 0) {
+            ghostDeadlines.forEach(dId => delete userDeadlines[dId]);
+            await setDoc(
+                userRef,
+                {
+                    courses: {
+                        [courseName]: {
+                            ...courseData,
+                            deadlines: userDeadlines
+                        }
+                    }
+                },
+                { merge: true }
+            );
+            console.log(`Removed ghost deadlines for ${courseName}:`, ghostDeadlines);
+        }
     }
 
     // Placeholder if no notifications
@@ -67,7 +94,6 @@ function calculateRelativeTime(dueDate) {
     if (diff === 1) return { text: "due tomorrow", status: "reallyupcoming" };
     if (diff > 1) return { text: `due in ${diff} days`, status: "upcoming" };
     if (diff === -1) return { text: "overdue yesterday", status: "overdue" };
-
     return { text: `overdue ${Math.abs(diff)} days ago`, status: "overdue" };
 }
 
