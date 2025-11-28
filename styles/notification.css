@@ -51,6 +51,7 @@ body {
   background: #fff;
   -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+  flex-direction: row-reverse;
 }
 
 .notification-list--unread {
@@ -62,7 +63,6 @@ body {
   display: -ms-flexbox;
   display: flex;
   align-items: center;
-  
 }
 
 .notification-list .notification-list_content .notification-list_img img {
@@ -85,25 +85,29 @@ body {
 }
 
 .status-bar {
-    width: 5px;      
-    height: 100%;      
-    border-radius: 2px; 
-    margin-right: 15px; 
-    flex-shrink: 0;
+  width: 5px;
+  height: 100%;
+  border-radius: 2px;
+  margin-left: 15px;
+  flex-shrink: 0;
 }
 
 .status-bar.due-today {
-    background-color: #ff9900;
+  background-color: #ff9900;
+  width: 7px;
 }
 
 .status-bar.upcoming {
-    background-color: #007bff;
+  background-color: #007bff;
+  width: 7px;
 }
 
 .status-bar.reallyupcoming {
-    background-color: #bbcc00;
+  background-color: #bbcc00;
+  width: 7px;
 }
 
 .status-bar.overdue {
-    background-color: #ff4d4f;
+  background-color: #ff4d4f;
+  width: 7px;
 }

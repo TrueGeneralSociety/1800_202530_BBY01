@@ -52,12 +52,18 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const deadlineRef = doc(
         db,
-        "schools", school,
-        "programs", program,
-        "terms", term,
-        "channels", channel,
-        "courses", courseName,
-        "deadlines", deadlineId
+        "schools",
+        school,
+        "programs",
+        program,
+        "terms",
+        term,
+        "channels",
+        channel,
+        "courses",
+        courseName,
+        "deadlines",
+        deadlineId
       );
 
       // Mark deleted
@@ -108,11 +114,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const deadlinesRef = collection(
       db,
-      "schools", school,
-      "programs", program,
-      "terms", term,
-      "channels", channel,
-      "courses", courseName,
+      "schools",
+      school,
+      "programs",
+      program,
+      "terms",
+      term,
+      "channels",
+      channel,
+      "courses",
+      courseName,
       "deadlines"
     );
 
@@ -173,8 +184,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "🗑️";
-        deleteBtn.className = "btn btn-sm btn-danger ms-2";
+        const icon = document.createElement("i");
+        icon.className = "material-icons";
+        icon.textContent = "delete";
+        deleteBtn.classList.add("border-0", "shadow-none");
+        deleteBtn.appendChild(icon);
         deleteBtn.onclick = async (e) => {
           e.stopPropagation();
           await deleteDeadline(docSnap.id, user);
