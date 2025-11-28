@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const msgPage = document.querySelector(".msg-page");
 
   // TODO: Set this to the person you're chatting with
-  const otherUserId = "Emma"; // ← YOU MUST CHANGE THIS
+  const otherUserId = "Emma"; 
 
   // ========== AUTH CHECK ==========
   onAuthStateChanged(auth, (user) => {
