@@ -8,13 +8,13 @@ import {
   onSnapshot,
   setDoc,
   getDoc,
-  serverTimestamp,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 document.addEventListener("DOMContentLoaded", () => {
   const listContainer = document.querySelector(".list-item");
   const addDeadlineBtn = document.getElementById("add-deadline-btn");
+  const backBtn = document.getElementById("backButton");
 
   if (!listContainer) {
     console.error("Deadline list container not found in DOM");
@@ -34,8 +34,19 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Soft delete a deadline
-  async function deleteDeadline(deadlineId) {
+  // Go Back button
+  if (backBtn) {
+    const backQuery = new URLSearchParams({
+      school,
+      program,
+      term,
+      channel,
+    }).toString();
+    backBtn.href = `${window.location.origin}/html/channel.html?${backQuery}`;
+  }
+
+  // Soft delete + remove from user's map
+  async function deleteDeadline(deadlineId, user) {
     if (!confirm(`Are you sure you want to delete this deadline?`)) return;
 
     try {
@@ -49,12 +60,38 @@ document.addEventListener("DOMContentLoaded", () => {
         "deadlines", deadlineId
       );
 
+      // Mark deleted
       await setDoc(
         deadlineRef,
         { isDeleted: true, deletedAt: new Date().toISOString() },
         { merge: true }
       );
-      alert("Deadline hidden successfully.");
+
+      // Remove from user's deadlines
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data() || {};
+      const userCourseData = userData.courses?.[courseName] || {};
+
+      if (userCourseData.deadlines?.[deadlineId]) {
+        const updatedDeadlines = { ...userCourseData.deadlines };
+        delete updatedDeadlines[deadlineId];
+
+        await setDoc(
+          userRef,
+          {
+            courses: {
+              [courseName]: {
+                ...userCourseData,
+                deadlines: updatedDeadlines,
+              },
+            },
+          },
+          { merge: true }
+        );
+      }
+
+      alert("Deadline deleted successfully.");
     } catch (err) {
       console.error("Error deleting deadline:", err);
       alert("Failed to delete deadline.");
@@ -79,22 +116,19 @@ document.addEventListener("DOMContentLoaded", () => {
       "deadlines"
     );
 
-    // 1️⃣ Fetch once for sync
+    // Fetch once for sync
     const deadlineSnap = await getDocs(deadlinesRef);
     const newDeadlines = {};
 
     deadlineSnap.forEach((docSnap) => {
       const dId = docSnap.id;
       const data = docSnap.data();
-
       if (data.isDeleted) return;
-
       if (!userCourseData.deadlines?.[dId]) {
         newDeadlines[dId] = true;
       }
     });
 
-    // 2️⃣ Update user DB if new deadlines exist
     if (Object.keys(newDeadlines).length > 0) {
       await setDoc(
         userRef,
@@ -114,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Synced user deadlines:", newDeadlines);
     }
 
-    // 3️⃣ Real-time rendering
+    // Real-time rendering
     onSnapshot(deadlinesRef, (snapshot) => {
       listContainer.innerHTML = "";
 
@@ -143,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteBtn.className = "btn btn-sm btn-danger ms-2";
         deleteBtn.onclick = async (e) => {
           e.stopPropagation();
-          await deleteDeadline(docSnap.id);
+          await deleteDeadline(docSnap.id, user);
           li.remove();
         };
 
@@ -164,7 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "/index.html";
       return;
     }
-
     loadAndSyncDeadlines(user);
   });
 
