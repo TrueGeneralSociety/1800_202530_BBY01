@@ -3,23 +3,26 @@ import 'bootstrap';
 import { auth, db } from './firebase.js';
 import { doc, getDoc, setDoc, collection, getDocs, serverTimestamp } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import { channel } from 'diagnostics_channel';
 
-// Elements
+// ----------------------
+// DOM Elements
+// ----------------------
 const form = document.getElementById('add-course-form');
 const courseSelect = document.getElementById('course-select');
 const courseInput = document.getElementById('course-input');
 
-// URL params
-const urlParams = new URLSearchParams(window.location.search);
-const schoolName = urlParams.get('school');
-const programName = urlParams.get('program');
-const termName = urlParams.get('term');
-const channelName = urlParams.get('channel');
+// ----------------------
+// URL Params
+// ----------------------
+const params = new URLSearchParams(window.location.search);
+const schoolName = params.get('school');
+const programName = params.get('program');
+const termName = params.get('term');
+const channelName = params.get('channel');
 
 if (!schoolName || !programName || !termName || !channelName) {
-  alert('Channel information missing. Cannot add courses.');
-  throw new Error('Missing channel info in URL');
+  alert('Missing channel information.');
+  throw new Error('Missing URL params');
 }
 
 onAuthStateChanged(auth, async (user) => {
@@ -28,9 +31,13 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  // Load existing courses under this channel
+  const userRef = doc(db, 'users', user.uid);
+
+  // ----------------------
+  // Load Channel Courses
+  // ----------------------
   async function loadCourses() {
-    courseSelect.innerHTML = '<option value="">-- Select Existing Course --</option>';
+    courseSelect.innerHTML = `<option value="">-- Select Existing Course --</option>`;
 
     const coursesRef = collection(
       db,
@@ -45,47 +52,56 @@ onAuthStateChanged(auth, async (user) => {
       'courses'
     );
 
-    const snapshot = await getDocs(coursesRef);
-    const userRef = doc(db, 'users', user.uid);
     const userSnap = await getDoc(userRef);
     const userData = userSnap.data() || {};
-    const updatedCourses = { ...(userData.courses || {}) };
-    const channelKey = `${schoolName}-${programName}-${termName}-${channelName}`;
-    const updatedChannels = { ...(userData.channels || {}), [channelKey]: true };
 
+    const existingUserCourses = { ...(userData.courses || {}) };
+    const existingUserChannels = { ...(userData.channels || {}) };
+
+    const channelKey = `${schoolName}-${programName}-${termName}-${channelName}`;
     let needsUpdate = false;
+
+    const snapshot = await getDocs(coursesRef);
 
     snapshot.forEach((docSnap) => {
       const data = docSnap.data();
-      if (!data.isDeleted) {
-        // Populate select dropdown
-        const option = document.createElement('option');
-        option.value = docSnap.id;
-        option.textContent = docSnap.id;
-        courseSelect.appendChild(option);
+      const option = document.createElement('option');
+      option.value = docSnap.id;
 
-        // Update user.courses if missing
-        if (!updatedCourses[docSnap.id]) {
-          updatedCourses[docSnap.id] = {
-            school: schoolName,
-            program: programName,
-            term: termName,
-            channel: channelName,
-            channelKey,
-            addedAt: data.createdAt || serverTimestamp()
-          };
-          needsUpdate = true;
-        }
+      if (data.isDeleted) {
+        option.textContent = `${docSnap.id}`;
+      } else {
+        option.textContent = docSnap.id;
+      }
+
+      courseSelect.appendChild(option);
+      // Add to user.courses if missing
+      if (!existingUserCourses[docSnap.id]) {
+        existingUserCourses[docSnap.id] = {
+          school: schoolName,
+          program: programName,
+          term: termName,
+          channel: channelName,
+          channelKey,
+          addedAt: data.createdAt || serverTimestamp()
+        };
+        needsUpdate = true;
       }
     });
 
-    // Update user document if needed
+    // Add channel to user
+    if (!existingUserChannels[channelKey]) {
+      existingUserChannels[channelKey] = true;
+      needsUpdate = true;
+    }
+
+    // Update user doc if needed
     if (needsUpdate) {
       await setDoc(
         userRef,
         {
-          courses: updatedCourses,
-          channels: updatedChannels,
+          courses: existingUserCourses,
+          channels: existingUserChannels,
           lastActive: serverTimestamp()
         },
         { merge: true }
@@ -93,16 +109,20 @@ onAuthStateChanged(auth, async (user) => {
     }
   }
 
-
   await loadCourses();
 
-  // Handle form submit
+  // ----------------------
+  // Add Course Handler
+  // ----------------------
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const courseName = (courseInput.value.trim() || courseSelect.value.trim());
+    const typed = courseInput.value.trim();
+    const selected = courseSelect.value.trim();
+    const courseName = typed || selected;
+
     if (!courseName) {
-      alert('Please select or enter a course name.');
+      alert('Please type a course name or select one.');
       return;
     }
 
@@ -120,44 +140,30 @@ onAuthStateChanged(auth, async (user) => {
       courseName
     );
 
-    const userRef = doc(db, 'users', user.uid);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data() || {};
 
-    // 채널 key 생성
     const channelKey = `${schoolName}-${programName}-${termName}-${channelName}`;
+
+    // Prepare user course info
+    const newCourseInfo = {
+      school: schoolName,
+      program: programName,
+      term: termName,
+      channel: channelName,
+      channelKey,
+      addedAt: serverTimestamp()
+    };
 
     try {
       const courseSnap = await getDoc(courseRef);
-      const userSnap = await getDoc(userRef);
-      const userData = userSnap.exists() ? userSnap.data() : {};
-
-      // 새 코스 정보
-      const newCourseInfo = {
-        school: schoolName,
-        program: programName,
-        term: termName,
-        channel: channelName,
-        channelKey,
-        addedAt: serverTimestamp()
-      };
-
-      // 기존 courses/채널 업데이트
-      const updatedCourses = {
-        ...(userData.courses || {}),
-        [courseName]: newCourseInfo
-      };
-      const updatedChannels = {
-        ...(userData.channels || {}),
-        [channelKey]: true
-      };
+      let isReactivated = false;
 
       if (courseSnap.exists()) {
         const data = courseSnap.data();
         if (data.isDeleted) {
-          // Reactivate course
           await setDoc(courseRef, { isDeleted: false, updatedAt: serverTimestamp() }, { merge: true });
-        } else {
-          alert(`Course "${courseName}" already exists in this channel.`);
-          return;
+          isReactivated = true;
         }
       } else {
         // Create new course
@@ -168,27 +174,32 @@ onAuthStateChanged(auth, async (user) => {
         });
       }
 
-      // user doc update
+      // Update user courses + channels always
       await setDoc(
         userRef,
         {
-          courses: updatedCourses,
-          channels: updatedChannels,
+          courses: {
+            ...(userData.courses || {}),
+            [courseName]: newCourseInfo
+          },
+          channels: {
+            ...(userData.channels || {}),
+            [channelKey]: true
+          },
           lastActive: serverTimestamp()
         },
         { merge: true }
       );
 
-      alert(`Course "${courseName}" added/updated successfully!`);
+      alert(`Course "${courseName}" ${isReactivated ? 'restored' : 'added'} successfully!`);
 
       courseInput.value = '';
       await loadCourses();
 
-      // Optional: redirect back to channel page
       window.location.href = `/html/channel.html?school=${encodeURIComponent(schoolName)}&program=${encodeURIComponent(programName)}&term=${encodeURIComponent(termName)}&channel=${encodeURIComponent(channelName)}`;
-    } catch (error) {
-      console.error(error);
-      alert('Failed to add course. Check console for details.');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to add course.');
     }
   });
 });
