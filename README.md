@@ -8,7 +8,7 @@ Track and add deadlines for courses.
 
 Access a shared calendar view of deadlines.
 
-Receive notifications for upcoming deadlines.\
+Receive notifications for upcoming deadlines.
 ---
 
 
@@ -43,7 +43,7 @@ Navigate to the desired course channel.
 
 Add a deadline for the course.
 
-View the calendar page to see all deadlines.
+View the calendar page to see all deadlines.(not implemented yet)
 
 Notifications for upcoming deadlines will appear automatically.
 

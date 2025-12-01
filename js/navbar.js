@@ -28,9 +28,8 @@ class SiteNavbar extends HTMLElement {
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="/html/profile.html">Profile</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">What we do</a></li>
                 <li class="nav-item"><a class="nav-link" href="/html/calendar.html">Calendar</a></li>
-                <li class="nav-item"><a class="nav-link" href="/html/deadline_list.html">Deadlines</a></li>
+                <li class="nav-item"><a class="nav-link" href="/html/notification.html">Deadlines</a></li>
               </ul>
 
               <ul class="navbar-nav ms-auto">
