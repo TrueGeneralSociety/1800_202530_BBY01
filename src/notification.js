@@ -47,16 +47,9 @@ function formatDate(date) {
 }
 
 async function loadNotifications(user) {
-  const overdueContainer = document.querySelector(
-    ".notification_deadline_overdue"
-  );
-
-  const due24hContainer = document.querySelector(
-    ".notification_deadline_due_in_24h"
-  );
-  const duelaterContainer = document.querySelector(
-    ".notification_deadline_due_later"
-  );
+  const overdueContainer = document.querySelector(".notification_deadline_overdue");
+  const due24hContainer = document.querySelector(".notification_deadline_due_in_24h");
+  const duelaterContainer = document.querySelector(".notification_deadline_due_later");
 
   overdueContainer.innerHTML = "";
   due24hContainer.innerHTML = "";
@@ -69,16 +62,23 @@ async function loadNotifications(user) {
   let totalNotifications = 0;
 
   for (const [courseName, courseData] of Object.entries(courses)) {
-    const deadlinesRef = collection(
-      db,
-      `schools/${courseData.school}/programs/${courseData.program}/terms/${courseData.term}/channels/${courseData.channel}/courses/${courseName}/deadlines`
-    );
+    const userDeadlineMap = courseData.deadlines || {};
 
-    const deadlinesSnapshot = await getDocs(deadlinesRef);
-    deadlinesSnapshot.forEach((deadlineDoc) => {
-      const d = deadlineDoc.data();
+    // Skip deleted courses or if there are no deadlines
+    if (courseData.isDeleted || Object.keys(userDeadlineMap).length === 0) continue;
+
+    const courseDeadlinePath = `schools/${courseData.school}/programs/${courseData.program}/terms/${courseData.term}/channels/${courseData.channel}/courses/${courseName}/deadlines`;
+
+    for (const deadlineId of Object.keys(userDeadlineMap)) {
+      const deadlineDocRef = doc(db, courseDeadlinePath, deadlineId);
+      const deadlineSnap = await getDoc(deadlineDocRef);
+
+      if (!deadlineSnap.exists()) continue;
+
+      const d = deadlineSnap.data();
       const relative = calculateRelativeTime(d.deadlineDateTime);
       const dueDate = new Date(d.deadlineDateTime);
+
       const cardHTML = createDeadlineCard(
         courseName,
         d.taskName,
@@ -87,13 +87,9 @@ async function loadNotifications(user) {
       );
 
       let targetContainer = null;
-
       if (relative.status === "overdue") {
         targetContainer = overdueContainer;
-      } else if (
-        relative.status === "reallyupcoming" ||
-        relative.status === "due-today"
-      ) {
+      } else if (relative.status === "reallyupcoming" || relative.status === "due-today") {
         targetContainer = due24hContainer;
       } else if (relative.status === "upcoming") {
         targetContainer = duelaterContainer;
@@ -103,12 +99,14 @@ async function loadNotifications(user) {
         targetContainer.insertAdjacentHTML("beforeend", cardHTML);
         totalNotifications++;
       }
-    });
+    }
   }
+
   if (totalNotifications === 0) {
-    duelaterContainer.innerHTML = "<li> No upcoming deadlines.</li>";
+    duelaterContainer.innerHTML = "<li>No upcoming deadlines.</li>";
   }
 }
+
 // Auth listener
 onAuthStateChanged(auth, (user) => {
   if (!user) {

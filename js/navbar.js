@@ -17,7 +17,7 @@ class SiteNavbar extends HTMLElement {
         <nav class="navbar navbar-expand-md custom-navbar">
           <div class="container-fluid">
             <a class="navbar-brand" href="${logoHref}">
-              <img src="/Logo/Logo.png" alt="SynCalendar Logo" height="40" class="me-2">
+              <img src="/img/Logo.png" alt="SynCalendar Logo" height="40" class="me-2">
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
