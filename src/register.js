@@ -22,7 +22,7 @@ signup.addEventListener("click", async (event) => {
     await updateProfile(user, { displayName: username });
 
     alert("Account created successfully!");
-    window.location.href = "/html/login/login.html"; // redirect to login page
+    window.location.href = "/html/login.html"; // redirect to login page
   } catch (error) {
     alert(error.message);
   }
