@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SynCalendar</title>
+    <meta name="comp1800 template" content="My 1800 App" />
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap -->
+    <script type="module" src="/src/js/app.js"></script>
+
+    <!-- Link to components -->
+    <link rel="icon" type="image/x-icon" href="/src/img/calendar.ico" />
+    <!-- <script type="module" src="../js/navbar.js"></script>  -->
+    <script type="module" src="/src/js/navbar.js"></script>
+    <script type="module" src="/src/js/footer.js"></script>
+
+    <!-- Link to styles of your own -->
+    <link rel="stylesheet" href="/src/styles/style.css" />
+    <link rel="stylesheet" href="/src/styles/calendar.css" />
+  </head>
+
+  <body>
+    <site-navbar></site-navbar>
+    <!-- Calendar format taken from W3Schools -->
+    <main>
+      <div class="month">
+        <ul>
+          <li class="prev" id="prev-month">&#10094;</li>
+          <li class="next" id="next-month">&#10095;</li>
+          <li id="month_container">
+            <!-- Filled in by script -->
+          </li>
+        </ul>
+      </div>
+
+      <ul class="weekdays">
+        <li>Mo</li>
+        <li>Tu</li>
+        <li>We</li>
+        <li>Th</li>
+        <li>Fr</li>
+        <li>Sa</li>
+        <li>Su</li>
+      </ul>
+
+      <ul class="days">
+        <!-- Add in using calendar.js -->
+      </ul>
+    </main>
+
+    <site-footer></site-footer>
+
+    <!------------------------------>
+    <!-- Your HTML Layout go here -->
+    <!------------------------------>
+    <!-- Stuff for body goes here -->
+
+    <!---------------------------------------------->
+    <!-- Your own JavaScript functions go here    -->
+    <!---------------------------------------------->
+
+    <!-- Link to scripts of your own -->
+    <script type="module" src="/src/js/calendar.js"></script>
+    <script
+      type="module"
+      src="/src/js/deadlineContainer/calendarDeadline.js"
+    ></script>
+  </body>
+</html>

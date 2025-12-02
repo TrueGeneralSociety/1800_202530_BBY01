@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SynCalendar</title>
+    <meta name="comp1800 template" content="My 1800 App" />
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Other libraries go here -->
+    <link rel="icon" type="image/x-icon" href="/src/img/calendar.ico" />
+    <script type="module" src="/src/js/navbar.js"></script>
+    <script type="module" src="/src/js/footer.js"></script>
+    <!-- Link to styles of your own -->
+    <link rel="stylesheet" href="/src/styles/style.css" />
+</head>
+
+<body>
+    <site-navbar></site-navbar>
+    <div class="container" style="padding:10px">
+        <h1 style="padding-top:70px">Profile</h1>
+        <form>
+            <fieldset class="info" id="personalInfo" disabled>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="nameInput" class="form-control" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="emailInput" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>School</label>
+                    <input type="text" id="schoolInput" class="form-control" placeholder="Enter your school" required>
+                </div>
+                <div class="form-group">
+                    <label>Major</label>
+                    <input type="text" id="majorInput" class="form-control" placeholder="Enter your major" required>
+                </div>
+                <div class="form-group">
+                    <label>Registered Courses</label>
+                    <input type="text" id="courseInput" class="form-control" placeholder="Enter your courses" required>
+                </div>
+            </fieldset>
+            <div style="padding-top: 20px;" class="profilebutton">
+                <button id="editButton" type="button" class="btn btn-secondary">Edit</button>
+                <span style="width:10px"></span>
+                <button style="background-color:#63aeff" id="saveButton" type="button"
+                    class="btn btn-info">Save</button>
+            </div>
+        </form>
+    </div>
+    <site-footer></site-footer>
+    <!------------------------------>
+    <!-- Your HTML Layout go here -->
+    <!------------------------------>
+    <!-- Stuff for body goes here -->
+
+    <!---------------------------------------------->
+    <!-- Your own JavaScript functions go here    -->
+    <!---------------------------------------------->
+
+    <!-- Link to scripts of your own -->
+    <script type="module" src="/src/js/editprofile.js"></script>
+</body>
+
+</html>

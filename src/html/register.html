@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles/register.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/src/js/calendar.ico">
+    <title>Register</title>
+    <script type="module" src="/src/js/register.js" defer></script>
+</head>
+
+<body>
+    <a href="/index.html" class="logo-link">
+        <img src="/src/img/Logo.png" alt="SynCalendar Logo" class="logo" height="80" class="me-2">
+    </a>
+    <div class="form-container">
+        <h2>Create an Account </h2>
+        <form>
+            <div class="form-group">
+                <label for="username">User Name</label>
+                <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" required>
+            </div>
+            <button id="registerBtn" class="registerbtn btn-primary">Register</button>
+            <small>Already have an account? <a href="/src/html/login.html">Login here</a></small>
+        </form>
+    </div>
+
+</body>
+
+</html>
