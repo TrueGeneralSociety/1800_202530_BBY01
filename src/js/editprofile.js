@@ -95,6 +95,6 @@ const saveBtn = document.getElementById('saveButton');
 if (saveBtn) {
   saveBtn.addEventListener('click', () => {
     // Profile.html
-    window.location.href = '/src/html/Profile.html'; 
+    window.location.href = '/src/html/profile.html'; 
   });
 }
