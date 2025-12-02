@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
-import { auth, db } from "../firebase.js"; // adjust path if needed
+import { auth, db } from "/src/js/firebase.js"; // adjust path if needed
 import {
   collection,
   getDocs,

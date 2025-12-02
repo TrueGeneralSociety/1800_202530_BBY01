@@ -78,7 +78,7 @@ main {
 }
 
 .hero-image {
-  background: url('/src/img/bg1.svg') no-repeat;
+  background: url('../img/bg1.svg') no-repeat center center;
   background-size: contain;
   background-position: center;
   height: 100vh;
