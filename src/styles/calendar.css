@@ -96,3 +96,12 @@ body {
   cursor: pointer;
   user-select: none;
 }
+
+.today {
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  margin-left: auto;
+  margin-right: auto;
+}
