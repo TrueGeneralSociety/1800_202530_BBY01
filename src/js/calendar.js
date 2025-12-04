@@ -33,7 +33,7 @@ async function renderMonth(year, monthIndex) {
 
   // Store {month number}.html in a variable
   const response = await fetch(
-    "/src/fragments/" + year + "/" + (monthIndex + 1) + ".html"
+    "/fragments/" + year + "/" + (monthIndex + 1) + ".html"
   );
   const htmlContent = await response.text();
   // Insert the fetched HTML into the days container

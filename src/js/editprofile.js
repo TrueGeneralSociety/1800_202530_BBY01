@@ -90,11 +90,3 @@ async function saveUserInfo(uid) {
   }
 }
 // editprofile.js
-const saveBtn = document.getElementById('saveButton');
-
-if (saveBtn) {
-  saveBtn.addEventListener('click', () => {
-    // Profile.html
-    window.location.href = '/src/html/profile.html'; 
-  });
-}

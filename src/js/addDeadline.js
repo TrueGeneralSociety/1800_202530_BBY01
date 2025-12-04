@@ -11,7 +11,7 @@ const form = document.getElementById('add-deadline-form');
 const taskNameInput = document.getElementById('taskName');
 const deadlineDateInput = document.getElementById('deadlineDateTime');
 const notesInput = document.getElementById('notes');
-const backBtn = document.getElementById('backButton');
+const backBtn = document.getElementById('backBtn');
 
 // ----------------------
 // URL Params
@@ -32,15 +32,20 @@ if (!schoolName || !programName || !termName || !channelName || !courseName) {
 // Build absolute URL for Go Back button
 // ----------------------
 if (backBtn) {
-  const backQuery = new URLSearchParams({
-    school: schoolName,
-    program: programName,
-    term: termName,
-    channel: channelName,
-    course: courseName
-  }).toString();
-  backBtn.href = `${window.location.origin}/src/html/course.html?${backQuery}`;
+  backBtn.onclick = () => {
+    const backQuery = new URLSearchParams({
+      school: schoolName,
+      program: programName,
+      term: termName,
+      channel: channelName,
+      course: courseName
+    }).toString();
+
+    // 상대 경로 사용하면 deploy 후에도 안전
+    window.location.href = `course.html?${backQuery}`;
+  };
 }
+
 
 // ----------------------
 // Auth Check
@@ -132,4 +137,5 @@ onAuthStateChanged(auth, async (user) => {
       alert('Failed to add deadline.');
     }
   });
+
 });

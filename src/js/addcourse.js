@@ -202,4 +202,11 @@ onAuthStateChanged(auth, async (user) => {
       alert('Failed to add course.');
     }
   });
+
+  const backbtn = document.getElementById('backBtn');
+  if (backbtn) {
+    backbtn.onclick = () => {
+      window.location.href = `/src/html/channel.html?school=${encodeURIComponent(schoolName)}&program=${encodeURIComponent(programName)}&term=${encodeURIComponent(termName)}&channel=${encodeURIComponent(channelName)}`;
+    }
+  }
 });

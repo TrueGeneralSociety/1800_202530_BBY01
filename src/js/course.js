@@ -14,7 +14,7 @@ import { onAuthStateChanged } from "firebase/auth";
 document.addEventListener("DOMContentLoaded", () => {
   const listContainer = document.querySelector(".list-item");
   const addDeadlineBtn = document.getElementById("add-deadline-btn");
-  const backBtn = document.getElementById("backButton");
+  const backBtn = document.getElementById("backBtn");
 
   if (!listContainer) {
     console.error("Deadline list container not found in DOM");
@@ -36,14 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Go Back button
   if (backBtn) {
-    const backQuery = new URLSearchParams({
-      school,
-      program,
-      term,
-      channel,
-    }).toString();
-    backBtn.href = `${window.location.origin}/html/channel.html?${backQuery}`;
-  }
+  backBtn.onclick = () => {
+    const backQuery = new URLSearchParams({ school, program, term, channel }).toString();
+    window.location.href = `channel.html?${backQuery}`;
+  };
+}
+
 
   // Soft delete + remove from user's map
   async function deleteDeadline(deadlineId, user) {
@@ -229,4 +227,5 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = `/src/html/addDeadline.html?${paramsStr}`;
     };
   }
+
 });

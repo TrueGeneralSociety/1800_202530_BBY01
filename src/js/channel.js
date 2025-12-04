@@ -232,4 +232,12 @@ document.addEventListener("DOMContentLoaded", () => {
       )}&channel=${encodeURIComponent(channelName)}`;
     };
   }
+
+  const backbtn = document.getElementById('backBtn');
+  if (backbtn) {
+    backbtn.onclick = () => {
+      window.location.href = "main.html";
+    }
+  }
+
 });
