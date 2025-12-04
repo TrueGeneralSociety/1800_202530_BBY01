@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SynCalendar</title>
+    <meta name="comp1800 template" content="My 1800 App" />
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Other libraries go here -->
+    <link rel="icon" type="image/x-icon" href="/src/img/calendar.ico" />
+    <script type="module" src="/src/js/navbar.js"></script>
+    <script type="module" src="/src/js/footer.js"></script>
+    <!-- Link to styles of your own -->
+    <link rel="stylesheet" href="/src/styles/style.css" />
+</head>
+
+<body>
+    <site-navbar></site-navbar>
+
+
+    <main class="container mt-7 pt-5">
+        <h2 class="text-center mb-4">My Profile</h2>
+        <h4 id="profileName" class="mb-1"></h4>
+        <p id="profileEmail" class="text-muted mb-3"></p>
+
+        <hr />
+
+        <div class="text-start">
+
+            <p><strong>School: </strong> <span id="profileSchool"></span></p>
+            <p><strong>Major:</strong>
+                <span id="profileMajor"></span>
+            </p>
+            <p><strong>Registered Courses:</strong> <span id="profileCourse"></span></p>
+        </div>
+
+        <button id="editProfileBtn" class="btn btn-primary mt-3" onclick="window.location.href='/src/html/editprofile.html'">Edit
+            Profile</button>
+        </div>
+        </div>
+    </main>
+
+    <site-footer></site-footer>
+
+    <script type="module" defer src="/src/js/updateprofile.js"></script>
+</body>
+
+</html>

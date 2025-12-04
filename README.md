@@ -8,7 +8,7 @@ Track and add deadlines for courses.
 
 Access a shared calendar view of deadlines.
 
-Receive notifications for upcoming deadlines.\
+Receive notifications for upcoming deadlines.
 ---
 
 
@@ -43,7 +43,7 @@ Navigate to the desired course channel.
 
 Add a deadline for the course.
 
-View the calendar page to see all deadlines.
+View the calendar page to see all deadlines.(not implemented yet)
 
 Notifications for upcoming deadlines will appear automatically.
 
@@ -55,34 +55,19 @@ Notifications for upcoming deadlines will appear automatically.
 ```
 1800_202530_BBY01/
 ├── .env_template
+├── .firebase/
+│   └── hosting.ZGlzdA.cache
+├── .firebaserc
 ├── .gitignore
-├── html/
-│   ├── addchannel.html
-│   ├── addcourse.html
-│   ├── addDeadline.html
-│   ├── calendar.html
-│   ├── channel.html
-│   ├── course.html
-│   ├── deadline_list.html
-│   ├── editprofile.html
-│   ├── login/
-│   │   ├── login.html
-│   │   └── register.html
-│   ├── main.html
-│   ├── notification.html
-│   ├── profile.html
-│   ├── registerCourses.html
-│   └── skeleton.html
-├── img/
-│   ├── calendar.ico
-│   ├── COMP 1113.png
-│   ├── COMP 1116.png
-│   ├── COMP 1510.png
-│   └── COMP 1712.png
+├── default
+├── firebase.json
+├── firestore.indexes.json
+├── firestore.rules
 ├── index.html
-├── js/
-│   ├── calendar.js
-│   ├── footer.js
+├── package-lock.json
+├── package.json
+├── README.md
+├── src/
 │   ├── fragments/
 │   │   ├── 2025/
 │   │   │   ├── 1.html
@@ -123,53 +108,77 @@ Notifications for upcoming deadlines will appear automatically.
 │   │       ├── 7.html
 │   │       ├── 8.html
 │   │       └── 9.html
-│   └── navbar.js
-├── Logo/
-│   ├── colored-logo.pdf
-│   ├── colored-logo.png
-│   ├── colored-logo.svg
-│   ├── Logo.png
-│   ├── transparent-logo.pdf
-│   ├── transparent-logo.png
-│   └── transparent-logo.svg
-├── package-lock.json
-├── package.json
-├── README.md
-├── src/
-│   ├── addchannel.js
-│   ├── addcourse.js
-│   ├── addDeadline.js
-│   ├── authentification.js
-│   ├── channel.js
-│   ├── course.js
-│   ├── deadlineContainer/
+│   ├── html/
+│   │   ├── addchannel.html
+│   │   ├── addcourse.html
+│   │   ├── addDeadline.html
+│   │   ├── calendar.html
+│   │   ├── channel.html
+│   │   ├── chat.html
+│   │   ├── course.html
+│   │   ├── deadline_list.html
+│   │   ├── editprofile.html
+│   │   ├── friends.html
+│   │   ├── login.html
+│   │   ├── main.html
+│   │   ├── notification.html
+│   │   ├── profile.html
+│   │   ├── register.html
+│   │   └── registerCourses.html
+│   ├── img/
+│   │   ├── bell-fill.svg
+│   │   ├── bg.svg
+│   │   ├── bg1.svg
+│   │   ├── calendar.ico
+│   │   ├── chat.svg
+│   │   ├── colored-logo.pdf
+│   │   ├── colored-logo.png
+│   │   ├── colored-logo.svg
+│   │   ├── COMP 1113.png
+│   │   ├── COMP 1116.png
+│   │   ├── COMP 1510.png
+│   │   ├── COMP 1712.png
+│   │   ├── house.svg
+│   │   ├── Logo.png
+│   │   ├── logo1.svg
+│   │   ├── person-circle.svg
+│   │   ├── transparent-logo.pdf
+│   │   ├── transparent-logo.png
+│   │   └── transparent-logo.svg
+│   ├── js/
+│   │   ├── addchannel.js
+│   │   ├── addcourse.js
+│   │   ├── addDeadline.js
+│   │   ├── app.js
+│   │   ├── authentification.js
+│   │   ├── calendar.js
 │   │   ├── calendarDeadline.js
-│   │   └── listDeadline.js
-│   ├── editprofile.js
-│   ├── firebase.js
-│   ├── index.js
-│   ├── login.js
-│   ├── main.js
-│   ├── migration.js
-│   ├── notification.js
-│   ├── register.js
-│   ├── registerCourse.js
-│   └── updateprofile.js
-├── styles/
-│   ├── calendar.css
-│   ├── editProfile.css
-│   ├── login.css
-│   ├── notification.css
-│   ├── register.css
-│   └── style.css
-└── svgs/
-    ├── bell-fill.svg
-    ├── bg.svg
-    ├── bg1.svg
-    ├── chat.svg
-    ├── house.svg
-    ├── logo1.svg
-    └── person-circle.svg
+│   │   ├── channel.js
+│   │   ├── chat.js
+│   │   ├── course.js
+│   │   ├── editprofile.js
+│   │   ├── firebase.js
+│   │   ├── footer.js
+│   │   ├── index.js
+│   │   ├── listDeadline.js
+│   │   ├── login.js
+│   │   ├── main.js
+│   │   ├── migration.js
+│   │   ├── navbar.js
+│   │   ├── notification.js
+│   │   ├── register.js
+│   │   ├── registerCourse.js
+│   │   └── updateprofile.js
+│   └── styles/
+│       ├── calendar.css
+│       ├── chat.css
+│       ├── editProfile.css
+│       ├── friends.css
+│       ├── login.css
+│       ├── notification.css
+│       ├── register.css
+│       └── style.css
+└── vite.config.js
 
 ```
 
